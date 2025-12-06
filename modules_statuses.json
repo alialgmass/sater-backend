@@ -1,4 +1,8 @@
 {
     "Vendor": true,
-    "Category": true
+    "Category": true,
+    "Product": true,
+    "Order": true,
+    "Stock": true,
+    "Review": true
 }
