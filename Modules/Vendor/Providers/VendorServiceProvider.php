@@ -4,6 +4,8 @@ namespace Modules\Vendor\Providers;
 
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
+use Modules\Vendor\Repositories\Contracts\VendorRepositoryInterface;
+use Modules\Vendor\Repositories\Sql\EloquentVendorRepository;
 use Nwidart\Modules\Traits\PathNamespace;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -36,6 +38,7 @@ class VendorServiceProvider extends ServiceProvider
     {
         $this->app->register(EventServiceProvider::class);
         $this->app->register(RouteServiceProvider::class);
+        $this->app->bind(VendorRepositoryInterface::class, EloquentVendorRepository::class);
     }
 
     /**
