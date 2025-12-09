@@ -82,7 +82,7 @@
         ]
     },
     "extra": {
-        "laravel": {
+        "Laravel": {
             "dont-discover": []
         }
     },

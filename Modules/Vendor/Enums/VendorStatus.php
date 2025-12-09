@@ -28,6 +28,15 @@ enum VendorStatus: string
         ];
     }
 
+    public static function options(): array
+    {
+        return [
+            self::PENDING->value => 'Pending',
+            self::ACTIVE->value => 'Active',
+            self::SUSPENDED->value => 'Suspended',
+        ];
+    }
+
     /**
      * Get status label.
      */

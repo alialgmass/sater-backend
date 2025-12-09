@@ -24,7 +24,8 @@ class AdminPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
-        return $panel
+
+        $panel=   $panel
             ->default()
             ->id('admin')
             ->path('admin')
@@ -57,5 +58,31 @@ class AdminPanelProvider extends PanelProvider
                 Authenticate::class,
             ])
             ->plugin(ModulesPlugin::make());
+        $this->discoverModuleResources($panel);
+        return $panel;
     }
+    protected function discoverModuleResources(Panel $panel): void
+    {
+        $modulesPath = base_path('Modules');
+
+        if (!is_dir($modulesPath)) {
+            return;
+        }
+
+        foreach (scandir($modulesPath) as $module) {
+            if ($module === '.' || $module === '..') {
+                continue;
+            }
+
+            $resourcePath = "{$modulesPath}/{$module}/Filament/Resources";
+
+            if (is_dir($resourcePath)) {
+                $panel->discoverResources(
+                    in: $resourcePath,
+                    for: "Modules\\{$module}\\Filament\\Resources"
+                );
+            }
+        }
+    }
+
 }
