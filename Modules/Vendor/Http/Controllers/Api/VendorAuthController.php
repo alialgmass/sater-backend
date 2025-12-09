@@ -31,32 +31,7 @@ class VendorAuthController extends ApiController
         ])->apiResponse();
     }
 
-    /**
-     * Get vendor by slug.
-     */
-    public function show(string $slug): JsonResponse
-    {
-        try {
-            $vendor = $this->vendorService->getBySlug($slug);
 
-            if (!$vendor) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Vendor not found.',
-                ], 404);
-            }
-
-            return response()->json([
-                'success' => true,
-                'vendor' => new VendorResource($vendor),
-            ]);
-        } catch (Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], 500);
-        }
-    }
 
     /**
      * Check if slug is available.
@@ -65,53 +40,10 @@ class VendorAuthController extends ApiController
     {
         $available = $this->vendorService->isSlugAvailable($slug);
 
-        return response()->json([
+        return $this->apiBody([
             'available' => $available,
             'slug' => $slug,
-        ]);
+        ])->apiResponse();
     }
 
-    /**
-     * Get all active vendors.
-     */
-    public function index(): JsonResponse
-    {
-        try {
-            $vendors = $this->vendorService->getActiveVendors();
-
-            return response()->json([
-                'success' => true,
-                'vendors' => VendorResource::collection($vendors),
-            ]);
-        } catch (Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], 500);
-        }
-    }
-
-    /**
-     * Search vendors.
-     */
-    public function search(Request $request): JsonResponse
-    {
-        $request->validate([
-            'query' => 'required|string|min:2',
-        ]);
-
-        try {
-            $vendors = $this->vendorService->search($request->query);
-
-            return response()->json([
-                'success' => true,
-                'vendors' => VendorResource::collection($vendors),
-            ]);
-        } catch (Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], 500);
-        }
-    }
 }
