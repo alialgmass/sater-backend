@@ -2,7 +2,7 @@
 
 namespace Modules\Vendor\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Api\ApiController;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Modules\Vendor\DTOs\VendorDTO;
@@ -10,36 +10,25 @@ use Modules\Vendor\Http\Requests\VendorRegisterRequest;
 use Modules\Vendor\Http\Resources\VendorResource;
 use Modules\Vendor\Services\VendorService;
 
-class VendorAuthController extends Controller
+class VendorAuthController extends ApiController
 {
     public function __construct(
         private VendorService $vendorService
-    ) {
+    )
+    {
     }
 
     /**
      * Register a new vendor.
+     * @throws Exception
      */
     public function register(VendorRegisterRequest $request): JsonResponse
     {
-        try {
-            // Create DTO from request
-            $dto = VendorDTO::fromRequest($request);
-
-            // Register vendor
-            $vendor = $this->vendorService->register($dto);
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Vendor registered successfully. Your account is pending approval.',
-                'vendor' => new VendorResource($vendor),
-            ], 201);
-        } catch (Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], 422);
-        }
+        $dto = VendorDTO::fromRequest($request);
+        $vendor = $this->vendorService->register($dto);
+        return $this->apiBody([
+            'vendor' => new VendorResource($vendor),
+        ])->apiResponse();
     }
 
     /**
