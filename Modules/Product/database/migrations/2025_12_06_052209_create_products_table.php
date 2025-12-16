@@ -28,7 +28,6 @@ return new class extends Migration
             $table->json('attributes')->nullable();
 
             $table->string('status')->default('active')->index();
-//['active', 'inactive']
             $table->softDeletes();
             $table->timestamps();
         });
