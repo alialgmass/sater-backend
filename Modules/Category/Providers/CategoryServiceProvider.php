@@ -4,6 +4,8 @@ namespace Modules\Category\Providers;
 
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
+use Modules\Category\Repositories\Contracts\CategoryRepositoryContract;
+use Modules\Category\Repositories\Sql\CategoryRepository;
 use Nwidart\Modules\Traits\PathNamespace;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -36,6 +38,7 @@ class CategoryServiceProvider extends ServiceProvider
     {
         $this->app->register(EventServiceProvider::class);
         $this->app->register(RouteServiceProvider::class);
+        $this->app->bind(CategoryRepositoryContract::class, CategoryRepository::class);
     }
 
     /**
