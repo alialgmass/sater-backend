@@ -3,6 +3,7 @@
 namespace Modules\Vendor\Repositories\Contracts;
 
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Modules\Vendor\DTOs\VendorDTO;
 use Modules\Vendor\Models\Vendor;
 
@@ -56,7 +57,7 @@ interface VendorRepositoryInterface
     /**
      * List all active vendors.
      */
-    public function listActiveVendors(): Collection;
+    public function listActiveVendors(): LengthAwarePaginator;
 
     /**
      * List all pending vendors.

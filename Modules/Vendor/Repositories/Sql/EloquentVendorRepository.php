@@ -2,6 +2,7 @@
 
 namespace Modules\Vendor\Repositories\Sql;
 
+use Illuminate\Pagination\LengthAwarePaginator;
 use Modules\Vendor\DTOs\VendorDTO;
 use Modules\Vendor\Enums\VendorStatus;
 use Modules\Vendor\Models\Vendor;
@@ -103,12 +104,12 @@ class EloquentVendorRepository implements VendorRepositoryInterface
     /**
      * List all active vendors.
      */
-    public function listActiveVendors():Collection
+    public function listActiveVendors():LengthAwarePaginator
     {
         return $this->model
             ->active()
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->paginate(20);
     }
 
     /**

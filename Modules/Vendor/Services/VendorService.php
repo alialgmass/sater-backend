@@ -16,6 +16,10 @@ class VendorService
         private VendorRepositoryInterface $vendorRepository
     ) {
     }
+    public function listActiveVendors(): \Illuminate\Pagination\LengthAwarePaginator
+    {
+        return $this->vendorRepository->listActiveVendors();
+    }
 
     /**
      * Register a new vendor.

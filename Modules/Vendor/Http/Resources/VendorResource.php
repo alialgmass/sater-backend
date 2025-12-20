@@ -2,11 +2,13 @@
 
 namespace Modules\Vendor\Http\Resources;
 
+use App\Support\Api\Resources\WithPagination;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class VendorResource extends JsonResource
 {
+    use WithPagination;
     public function toArray(Request $request): array
     {
         return [
