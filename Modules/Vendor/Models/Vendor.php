@@ -2,6 +2,7 @@
 
 namespace Modules\Vendor\Models;
 
+use App\Support\Media\InteractsWithMedia;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -10,12 +11,13 @@ use Modules\Product\Models\Product;
 use Modules\Vendor\Enums\VendorStatus;
 use Modules\Vendor\ValueObjects\PhoneNumber;
 use Modules\Vendor\ValueObjects\ShopSlug;
+use Spatie\MediaLibrary\HasMedia;
 
 // use Modules\Vendor\Database\Factories\VendorFactory;
 
-class Vendor extends Model
+class Vendor extends Model implements HasMedia
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, InteractsWithMedia;
     protected $fillable = [
         'name',
         'phone',

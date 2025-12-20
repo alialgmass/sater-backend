@@ -3,6 +3,7 @@
 namespace Modules\Product\Repositories\Sql;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Modules\Product\Models\Product;
 use Modules\Product\Repositories\Contracts\ProductRepositoryContract;
 
 class ProductRepository implements ProductRepositoryContract

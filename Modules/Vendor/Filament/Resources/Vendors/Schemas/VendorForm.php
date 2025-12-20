@@ -3,6 +3,7 @@
 namespace Modules\Vendor\Filament\Resources\Vendors\Schemas;
 
 use Filament\Forms;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Schemas\Schema;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
@@ -28,8 +29,8 @@ class VendorForm
             TextInput::make('password')
                 ->label('Password')
                 ->password()
-                ->required(fn ($livewire) => $livewire instanceof \Filament\Resources\Pages\CreateRecord)
-                ->dehydrated(fn ($state) => filled($state))
+                ->required(fn($livewire) => $livewire instanceof \Filament\Resources\Pages\CreateRecord)
+                ->dehydrated(fn($state) => filled($state))
                 ->maxLength(255),
 
             TextInput::make('shop_name')
@@ -49,16 +50,16 @@ class VendorForm
                 ->label('Description')
                 ->columnSpanFull(),
 
-            FileUpload::make('logo')
+            SpatieMediaLibraryFileUpload::make('logo')
                 ->label('Logo')
+                ->collection('logo')
                 ->image()
-                ->directory('vendors/logos')
                 ->maxSize(2048),
 
-            FileUpload::make('cover')
+            SpatieMediaLibraryFileUpload::make('cover')
                 ->label('Cover')
+                ->collection('cover')
                 ->image()
-                ->directory('vendors/covers')
                 ->maxSize(4096),
 
             Select::make('status')
