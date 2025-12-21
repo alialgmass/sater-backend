@@ -72,12 +72,17 @@ class ProductForm
                 Tab::make('Images')->schema([
                     SpatieMediaLibraryFileUpload::make('images')
                         ->label('Product Images')
+                        ->collection('images')
                         ->multiple()
                         ->image()
+                        ->disk('public')
                         ->enableReordering()
                         ->imageCropAspectRatio('1:1'),
                     SpatieMediaLibraryFileUpload::make('main_image')
+                        ->collection('main_image')
+                        ->disk('public')
                         ->label('Main Image')
+                        ->required()
                         ->image(),
                 ]),
                 Tab::make('Attributes')->schema([

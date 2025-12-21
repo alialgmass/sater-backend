@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Modules\Vendor\Http\Controllers\Api\VendorAuthController;
 use Modules\Vendor\Http\Controllers\Api\VendorController;
 
-Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
+Route::middleware([])->prefix('v1')->group(function () {
     Route::apiResource('vendors', VendorController::class)->names('vendor');
 });
 Route::prefix('vendors')->group(function () {
