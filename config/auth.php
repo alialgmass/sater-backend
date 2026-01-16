@@ -40,6 +40,21 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+
+        'web_admin' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
+
+        'web_vendor' => [
+            'driver' => 'session',
+            'provider' => 'vendors',
+        ],
+
+        'api_customers' => [
+            'driver' => 'sanctum',
+            'provider' => 'customers',
+        ],
     ],
 
     /*
@@ -57,12 +72,23 @@ return [
     |
     | Supported: "database", "eloquent"
     |
+    |
     */
 
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
             'model' => env('AUTH_MODEL', App\Models\User::class),
+        ],
+
+        'vendors' => [
+            'driver' => 'eloquent',
+            'model' => \Modules\Vendor\Models\Vendor::class,
+        ],
+
+        'customers' => [
+            'driver' => 'eloquent',
+            'model' => \Modules\Auth\Models\Customer::class,
         ],
 
         // 'users' => [

@@ -2,22 +2,28 @@
 
 namespace Modules\Vendor\Models;
 
-use App\Support\Media\InteractsWithMedia;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Hash;
-use Modules\Product\Models\Product;
-use Modules\Vendor\Enums\VendorStatus;
-use Modules\Vendor\ValueObjects\PhoneNumber;
-use Modules\Vendor\ValueObjects\ShopSlug;
+use Filament\Panel;
+use App\Support\Traits\HasRoles;
 use Spatie\MediaLibrary\HasMedia;
+use Modules\Product\Models\Product;
+use Illuminate\Support\Facades\Hash;
+use Modules\Vendor\Enums\VendorStatus;
+use App\Support\Media\InteractsWithMedia;
+use Modules\Vendor\ValueObjects\ShopSlug;
+use Filament\Models\Contracts\FilamentUser;
+use Modules\Vendor\ValueObjects\PhoneNumber;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-// use Modules\Vendor\Database\Factories\VendorFactory;
-
-class Vendor extends Model implements HasMedia
+class Vendor extends Authenticatable implements HasMedia, FilamentUser
 {
-    use HasFactory, SoftDeletes, InteractsWithMedia;
+    use HasFactory, SoftDeletes, InteractsWithMedia, HasRoles;
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return $panel->getId() === 'vendor' && $this->isActive();
+    }
     protected $fillable = [
         'name',
         'phone',
