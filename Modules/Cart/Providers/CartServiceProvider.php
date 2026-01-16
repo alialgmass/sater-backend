@@ -1,20 +1,20 @@
 <?php
 
-namespace Modules\Customer\Providers;
+namespace Modules\Cart\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use Modules\Customer\Models\CustomerProfile;
-use Modules\Customer\Policies\CustomerProfilePolicy;
-use Modules\Customer\Models\CustomerAddress;
-use Modules\Customer\Policies\CustomerAddressPolicy;
 use Illuminate\Support\Facades\Gate;
+use Modules\Cart\Models\CartItem;
+use Modules\Cart\Policies\CartItemPolicy;
+use Modules\Cart\Models\WishlistItem;
+use Modules\Cart\Policies\WishlistItemPolicy;
 
-class CustomerServiceProvider extends ServiceProvider
+class CartServiceProvider extends ServiceProvider
 {
     protected $policies = [
-        CustomerProfile::class => CustomerProfilePolicy::class,
-        CustomerAddress::class => CustomerAddressPolicy::class,
+        CartItem::class => CartItemPolicy::class,
+        WishlistItem::class => WishlistItemPolicy::class,
     ];
 
     public function boot(): void
@@ -35,7 +35,7 @@ class CustomerServiceProvider extends ServiceProvider
     {
         Route::prefix('api')
             ->middleware('api')
-            ->namespace('Modules\Customer\Http\Controllers\Api')
-            ->group(__DIR__ . './../Routes/api.php');
+            ->namespace('Modules\Cart\Http\Controllers\Api')
+            ->group(__DIR__ . '/../Routes/api.php');
     }
 }

@@ -6,5 +6,6 @@
     "Stock": true,
     "Review": true,
     "Auth": true,
-    "Customer": true
+    "Customer": true,
+    "Cart": true
 }
