@@ -1,0 +1,15 @@
+{
+    "name": "Cart",
+    "alias": "cart",
+    "description": "Shopping Cart & Wishlist Module",
+    "keywords": [
+        "cart",
+        "wishlist",
+        "shopping"
+    ],
+    "priority": 0,
+    "providers": [
+        "Modules\\Cart\\Providers\\CartServiceProvider"
+    ],
+    "files": []
+}

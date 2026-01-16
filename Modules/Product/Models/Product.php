@@ -26,13 +26,20 @@ class Product extends Model implements HasMedia
         'discounted_price',
         'stock',
         'attributes',
+        'clothing_attributes',
+        'keywords',
+        'sales_count',
+        'avg_rating',
+        'rating_count',
         'status',
     ];
 
     protected $casts = [
         'attributes' => 'array',
+        'clothing_attributes' => 'array',
         'price' => 'decimal:2',
         'discounted_price' => 'decimal:2',
+        'avg_rating' => 'decimal:2',
     ];
 
     public function vendor()

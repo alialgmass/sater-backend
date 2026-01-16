@@ -5,5 +5,7 @@
     "Order": true,
     "Stock": true,
     "Review": true,
-    "Auth": true
+    "Auth": true,
+    "Customer": true,
+    "Cart": true
 }
