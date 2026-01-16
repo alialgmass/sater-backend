@@ -2,10 +2,11 @@
 
 namespace Modules\Checkout\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
-use Modules\Checkout\Enums\CheckoutStatusEnum;
 use Carbon\Carbon;
+
+use Illuminate\Database\Eloquent\Model;
+use Modules\Checkout\Models\AppliedCoupon;
+use Modules\Checkout\Enums\CheckoutStatusEnum;
 
 class CheckoutSession extends Model
 {

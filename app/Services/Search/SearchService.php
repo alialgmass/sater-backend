@@ -3,8 +3,8 @@
 namespace App\Services\Search;
 
 use App\DTOs\ProductSearchDTO;
-use Illuminate\Pagination\Paginator;
 use Modules\Product\Models\Product;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 /**
  * Main search service orchestrating the search pipeline
@@ -33,7 +33,7 @@ class SearchService
      *
      * @return Paginator
      */
-    public function search(ProductSearchDTO $dto): Paginator
+    public function search(ProductSearchDTO $dto): LengthAwarePaginator
     {
         $query = $this->queryBuilder->build($dto);
 
