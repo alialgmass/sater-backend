@@ -7,5 +7,6 @@
     "Review": true,
     "Auth": true,
     "Customer": true,
-    "Cart": true
+    "Cart": true,
+    "Checkout": true
 }

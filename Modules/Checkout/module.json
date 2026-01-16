@@ -1,0 +1,15 @@
+{
+    "name": "Checkout",
+    "alias": "checkout",
+    "description": "Checkout & Order Placement Module",
+    "keywords": [
+        "checkout",
+        "order",
+        "payment"
+    ],
+    "priority": 0,
+    "providers": [
+        "Modules\\Checkout\\Providers\\CheckoutServiceProvider"
+    ],
+    "files": []
+}
