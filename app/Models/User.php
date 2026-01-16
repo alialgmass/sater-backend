@@ -6,11 +6,27 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Modules\Auth\Models\AdminProfile;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
+use Modules\Auth\Enums\UserRoleEnum;
 
-class User extends Authenticatable
+class User extends Authenticatable implements FilamentUser
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasRoles, HasApiTokens;
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        if ($panel->getId() === 'admin') {
+            return $this->hasRole(UserRoleEnum::ADMIN->value);
+        }
+
+        return false;
+    }
 
     /**
      * The attributes that are mass assignable.
@@ -45,4 +61,11 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function adminProfile(): HasOne
+    {
+        return $this->hasOne(AdminProfile::class);
+    }
+
+
 }

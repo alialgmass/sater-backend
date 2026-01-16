@@ -2,4 +2,6 @@
 
 namespace App\Support\Traits;
 
-trait HasRoles {}
+trait HasRoles {
+    use \Spatie\Permission\Traits\HasRoles;
+}
