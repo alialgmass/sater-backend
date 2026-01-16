@@ -17,6 +17,7 @@
         "laravel/tinker": "^2.10.1",
         "laravel/wayfinder": "^0.1.11",
         "nwidart/laravel-modules": "*",
+        "rakutentech/laravel-request-docs": "*",
         "spatie/laravel-medialibrary": "*",
         "spatie/laravel-permission": "*"
     },

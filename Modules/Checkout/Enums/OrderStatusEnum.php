@@ -1,0 +1,14 @@
+<?php
+
+namespace Modules\Checkout\Enums;
+
+enum OrderStatusEnum: string
+{
+    case PENDING = 'pending';
+    case CONFIRMED = 'confirmed';
+    case PROCESSING = 'processing';
+    case SHIPPED = 'shipped';
+    case DELIVERED = 'delivered';
+    case CANCELLED = 'cancelled';
+    case REFUNDED = 'refunded';
+}

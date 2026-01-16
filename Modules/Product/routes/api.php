@@ -6,7 +6,9 @@ use Modules\Product\Http\Controllers\Api\SearchController;
 
 Route::middleware([])->prefix('v1')->group(function () {
     // Products CRUD
-    Route::apiResource('products', ProductController::class)->names('product');
+    Route::apiResource('products', ProductController::class)
+    ->only('index')
+    ->names('product');
 
     // Search endpoints (public access)
     Route::prefix('search')->group(function () {
