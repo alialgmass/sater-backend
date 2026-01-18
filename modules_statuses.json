@@ -8,5 +8,7 @@
     "Auth": true,
     "Customer": true,
     "Cart": true,
-    "Checkout": true
+    "Checkout": true,
+    "Payment": true,
+    "Core": true
 }

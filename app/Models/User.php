@@ -13,6 +13,8 @@ use Modules\Auth\Models\AdminProfile;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Modules\Auth\Enums\UserRoleEnum;
+use Modules\Order\Models\Order;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable implements FilamentUser
 {
@@ -67,5 +69,8 @@ class User extends Authenticatable implements FilamentUser
         return $this->hasOne(AdminProfile::class);
     }
 
-
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Order::class, 'customer_id');
+    }
 }

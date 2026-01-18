@@ -7,20 +7,22 @@ use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\TagsInput;
+use Filament\Forms\Components\ColorPicker;
 
-
-use Filament\Schemas\Components\Grid;
-use Filament\Schemas\Components\Tabs;
-use Filament\Schemas\Components\Tabs\Tab;
-use Filament\Schemas\Schema;
+use Filament\Forms\Components\Tabs;
+use Filament\Forms\Components\Tabs\Tab;
+use Filament\Forms\Components\Grid;
 use Modules\Category\Models\Category;
 use Modules\Vendor\Models\Vendor;
 
 class ProductForm
 {
-    public static function configure(Schema $schema): Schema
+    public static function getSchema(): array
     {
-        return $schema->components([
+        return [
             Tabs::make('Product Tabs')->tabs([
                 Tab::make('General')->schema([
                     Grid::make()->schema([
@@ -34,7 +36,8 @@ class ProductForm
                         TextInput::make('sku')
                             ->placeholder('Stock Keeping Unit'),
                         Textarea::make('description')
-                            ->placeholder('Enter product description'),
+                            ->placeholder('Enter product description')
+                            ->rows(4),
                         Select::make('status')
                             ->options([
                                 'active' => 'Active',
@@ -48,10 +51,12 @@ class ProductForm
                         TextInput::make('price')
                             ->numeric()
                             ->required()
-                            ->placeholder('Enter price'),
+                            ->placeholder('Enter price')
+                            ->prefix('$'),
                         TextInput::make('discounted_price')
                             ->numeric()
-                            ->placeholder('Optional discounted price'),
+                            ->placeholder('Optional discounted price')
+                            ->prefix('$'),
                         TextInput::make('stock')
                             ->numeric()
                             ->placeholder('Available quantity in stock'),
@@ -70,20 +75,67 @@ class ProductForm
                     ])->columns(2),
                 ]),
                 Tab::make('Images')->schema([
-                    SpatieMediaLibraryFileUpload::make('images')
-                        ->label('Product Images')
-                        ->collection('images')
-                        ->multiple()
-                        ->image()
-                        ->disk('public')
-                        ->enableReordering()
-                        ->imageCropAspectRatio('1:1'),
                     SpatieMediaLibraryFileUpload::make('main_image')
                         ->collection('main_image')
                         ->disk('public')
                         ->label('Main Image')
                         ->required()
-                        ->image(),
+                        ->image()
+                        ->maxSize(2048)
+                        ->imageCropAspectRatio('1:1'),
+                    SpatieMediaLibraryFileUpload::make('images')
+                        ->label('Additional Images')
+                        ->collection('images')
+                        ->multiple()
+                        ->image()
+                        ->disk('public')
+                        ->enableReordering()
+                        ->imageCropAspectRatio('1:1')
+                        ->maxSize(2048),
+                ]),
+                Tab::make('Modesty Attributes')->schema([
+                    Section::make('Fabric & Material')
+                        ->description('Specify fabric and material properties')
+                        ->schema([
+                            TagsInput::make('fabric_types')
+                                ->label('Fabric Types')
+                                ->placeholder('Cotton, Polyester, etc.')
+                                ->helperText('Enter fabric types separated by commas'),
+                            Select::make('opacity_level')
+                                ->label('Opacity Level')
+                                ->options([
+                                    'opaque' => 'Opaque',
+                                    'semi_transparent' => 'Semi-Transparent',
+                                    'transparent' => 'Transparent',
+                                ])
+                                ->helperText('How see-through is the fabric'),
+                        ]),
+
+                    Section::make('Coverage & Style')
+                        ->description('Specify coverage and style attributes')
+                        ->schema([
+                            Select::make('sleeve_length')
+                                ->label('Sleeve Length')
+                                ->options([
+                                    'short_sleeve' => 'Short Sleeve',
+                                    'long_sleeve' => 'Long Sleeve',
+                                    'three_quarter_sleeve' => '3/4 Sleeve',
+                                    'sleeveless' => 'Sleeveless',
+                                    'cap_sleeve' => 'Cap Sleeve',
+                                ])
+                                ->helperText('Choose sleeve length option'),
+
+                            Select::make('hijab_style')
+                                ->label('Hijab Style')
+                                ->options([
+                                    'khimar' => 'Khimar',
+                                    'hijab' => 'Hijab',
+                                    'niqab' => 'Niqab',
+                                    'shayla' => 'Shayla',
+                                    'other' => 'Other',
+                                ])
+                                ->helperText('Choose hijab style if applicable'),
+                        ]),
                 ]),
                 Tab::make('Attributes')->schema([
                     Repeater::make('attributes')
@@ -99,6 +151,6 @@ class ProductForm
                         ->columns(2),
                 ]),
             ])->columnSpanFull(),
-        ]);
+        ];
     }
 }
