@@ -12,8 +12,7 @@ use Illuminate\Support\Str;
 class PaymentWebhookService
 {
     public function __construct(
-        protected PaymentGatewayFactory $gatewayFactory,
-        protected PaymentService $paymentService
+        protected PaymentGatewayFactory $gatewayFactory
     ) {}
 
     /**
@@ -66,9 +65,9 @@ class PaymentWebhookService
 
             // Update payment based on webhook result
             if ($result['status'] === 'success') {
-                $this->paymentService->processPaymentSuccess($payment, $result);
+                app(\Modules\Payment\Services\PaymentService::class)->processPaymentSuccess($payment, $result);
             } else {
-                $this->paymentService->processPaymentFailure(
+                app(\Modules\Payment\Services\PaymentService::class)->processPaymentFailure(
                     $payment, 
                     $result['error_message'] ?? 'Webhook processing failed', 
                     $result

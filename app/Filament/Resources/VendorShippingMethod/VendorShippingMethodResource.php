@@ -3,16 +3,26 @@
 namespace App\Filament\Resources\VendorShippingMethod;
 
 use BackedEnum;
-use Filament\Resources\Resource;
-use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Filament\Schemas\Schema;
+use Filament\Actions\EditAction;
+use Filament\Resources\Resource;
+use Filament\Support\Icons\Heroicon;
+use Filament\Actions\BulkActionGroup;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Toggle;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Section;
+use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
+use App\Models\Shipping\VendorShippingMethod as VendorShippingMethodModel;
+use App\Filament\Resources\VendorShippingMethod\Pages\EditVendorShippingMethod;
 use App\Filament\Resources\VendorShippingMethod\Pages\ListVendorShippingMethods;
 use App\Filament\Resources\VendorShippingMethod\Pages\CreateVendorShippingMethod;
-use App\Filament\Resources\VendorShippingMethod\Pages\EditVendorShippingMethod;
 use App\Filament\Resources\VendorShippingMethod\RelationManagers\VendorShippingRatesRelationManager;
-use App\Models\Shipping\VendorShippingMethod as VendorShippingMethodModel;
 
 class VendorShippingMethodResource extends Resource
 {
@@ -24,7 +34,7 @@ class VendorShippingMethodResource extends Resource
 {
     return $schema
         ->schema([
-            \Filament\Forms\Components\Section::make('Shipping Method Information')
+           Section::make('Shipping Method Information')
                     ->schema([
                         \Filament\Forms\Components\Select::make('vendor_id')
                             ->label('Vendor')
@@ -101,11 +111,11 @@ class VendorShippingMethodResource extends Resource
                     ->label('Status'),
             ])
             ->actions([
-                \Filament\Tables\Actions\EditAction::make(),
+              EditAction::make(),
             ])
             ->bulkActions([
-                \Filament\Tables\Actions\BulkActionGroup::make([
-                    \Filament\Tables\Actions\DeleteBulkAction::make(),
+                BulkActionGroup::make([
+                  DeleteBulkAction::make(),
                 ]),
             ])
             ->defaultSort('created_at', 'desc');

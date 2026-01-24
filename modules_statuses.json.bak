@@ -1,0 +1,14 @@
+{
+    "Vendor": true,
+    "Category": true,
+    "Product": true,
+    "Order": true,
+    "Stock": true,
+    "Review": true,
+    "Auth": true,
+    "Customer": true,
+    "Cart": true,
+    "Checkout": true,
+    "Payment": true,
+    "Core": true
+}

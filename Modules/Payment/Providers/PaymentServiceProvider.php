@@ -21,7 +21,6 @@ class PaymentServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->registerRoutes();
         $this->registerFactories();
         $this->loadMigrationsFrom(module_path($this->moduleName, 'Database/migrations'));
     }
