@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Search;
+namespace Modules\Product\Services\Search;
 
 use App\DTOs\ProductSearchDTO;
 use Illuminate\Database\Eloquent\Builder;

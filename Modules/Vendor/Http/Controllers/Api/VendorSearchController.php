@@ -2,11 +2,11 @@
 
 namespace Modules\Vendor\Http\Controllers\Api;
 
-use App\Http\Controllers\Api\ApiController;
 use App\DTOs\ProductSearchDTO;
-use App\Services\Search\SearchService;
+use App\Http\Controllers\Api\ApiController;
 use Illuminate\Http\Request;
 use Modules\Product\Http\Resources\ProductSearchResource;
+use Modules\Product\Services\Search\SearchService;
 use Modules\Vendor\Models\Vendor;
 
 /**

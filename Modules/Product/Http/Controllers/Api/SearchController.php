@@ -2,14 +2,14 @@
 
 namespace Modules\Product\Http\Controllers\Api;
 
-use App\Http\Controllers\Api\ApiController;
-use App\DTOs\ProductSearchDTO;
 use App\DTOs\AutocompleteDTO;
-use App\Services\Search\SearchService;
-use App\Services\Search\SearchHistoryService;
+use App\DTOs\ProductSearchDTO;
+use App\Http\Controllers\Api\ApiController;
 use Illuminate\Http\Request;
 use Modules\Product\Http\Resources\ProductSearchResource;
 use Modules\Product\Http\Resources\SearchSuggestionResource;
+use Modules\Product\Services\Search\SearchHistoryService;
+use Modules\Product\Services\Search\SearchService;
 
 /**
  * Search API Controller

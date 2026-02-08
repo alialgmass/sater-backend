@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Services\Search\SearchHistoryService;
 use Illuminate\Console\Command;
+use Modules\Product\Services\Search\SearchHistoryService;
 
 class PruneSearchHistory extends Command
 {

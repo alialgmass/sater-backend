@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Services\Search;
+namespace Modules\Product\Services\Search;
 
 use App\DTOs\ProductSearchDTO;
-use Modules\Product\Models\Product;
+use App\Services\Search\Paginator;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Modules\Product\Models\Product;
 
 /**
  * Main search service orchestrating the search pipeline

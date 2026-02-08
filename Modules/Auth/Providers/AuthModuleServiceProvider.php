@@ -11,6 +11,15 @@ class AuthModuleServiceProvider extends ServiceProvider
     {
         $this->registerRoutes();
         $this->registerMigrations();
+        $this->loadFactoriesFrom(__DIR__ . '/../database/factories');
+    }
+
+    public function register(): void
+    {
+        $this->app->bind(
+            \Modules\Auth\Repositories\CustomerRepositoryInterface::class,
+            \Modules\Auth\Repositories\CustomerRepository::class
+        );
     }
 
     protected function registerRoutes(): void

@@ -2,12 +2,8 @@
 
 namespace Tests\Feature\Search;
 
-use App\DTOs\ProductSearchDTO;
 use App\Models\User;
-use App\Services\Search\SearchHistoryService;
-use Modules\Product\Models\Product;
-use Modules\Category\Models\Category;
-use Modules\Vendor\Models\Vendor;
+use Modules\Product\Services\Search\SearchHistoryService;
 use Tests\TestCase;
 
 class SearchHistoryTest extends TestCase

@@ -2,6 +2,7 @@
 
 namespace Modules\Customer\Http\Controllers\Api;
 
+use App\Http\Controllers\Api\ApiController;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -11,7 +12,7 @@ use Modules\Customer\Services\ProfileService;
 use Modules\Customer\Transformers\CustomerProfileResource;
 use Modules\Customer\Services\AccountDeletionService;
 
-class ProfileController extends Controller
+class ProfileController extends ApiController
 {
     public function __construct(
         protected ProfileService $profileService,
@@ -22,9 +23,9 @@ class ProfileController extends Controller
     {
         $customer = $request->user();
         $this->authorize('view', $customer->profile ?? new \Modules\Customer\Models\CustomerProfile(['customer_id' => $customer->id]));
-        
+
         $profile = $this->profileService->getProfile($customer);
-        
+
         return response()->json(new CustomerProfileResource($profile));
     }
 
@@ -49,9 +50,9 @@ class ProfileController extends Controller
          if ($customer->id !== auth()->id()) {
              abort(403);
          }
-         
+
          $this->accountDeletionService->deleteAccount($customer);
-         
+
          return response()->json([
              'message' => 'Account deleted successfully.'
          ]);

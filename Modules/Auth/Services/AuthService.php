@@ -2,23 +2,55 @@
 
 namespace Modules\Auth\Services;
 
-use Modules\Auth\Models\Customer;
-use Illuminate\Auth\Events\Registered;
-use Modules\Auth\Actions\RegisterCustomerAction;
+use Modules\Auth\DTOs\LoginData;
 use Modules\Auth\DTOs\RegisterCustomerData;
+use Modules\Auth\Models\Customer;
+use Modules\Auth\Repositories\CustomerRepositoryInterface;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 
 class AuthService
 {
     public function __construct(
-        protected RegisterCustomerAction $registerCustomerAction
+        protected CustomerRepositoryInterface $customerRepository,
+        protected TokenService $tokenService
     ) {}
 
-    public function registerCustomer(RegisterCustomerData $data): Customer
+    public function register(RegisterCustomerData $data): array
     {
-        $customer = $this->registerCustomerAction->execute($data);
+        $customer = $this->customerRepository->create($data);
 
         event(new Registered($customer));
 
-        return $customer;
+        $token = $this->tokenService->createToken($customer);
+
+        return [
+            'customer' => $customer,
+            'token' => $token,
+        ];
+    }
+
+    public function login(LoginData $data): array
+    {
+        $customer = $this->customerRepository->findByEmail($data->email);
+
+        if (! $customer || ! Hash::check($data->password, $customer->password)) {
+            throw ValidationException::withMessages([
+                'email' => [__('auth.failed')],
+            ]);
+        }
+
+        $token = $this->tokenService->createToken($customer, $data->deviceName);
+
+        return [
+            'customer' => $customer,
+            'token' => $token,
+        ];
+    }
+
+    public function logout(Customer $customer): void
+    {
+        $this->tokenService->revokeTokens($customer);
     }
 }

@@ -36,6 +36,6 @@ class CustomerServiceProvider extends ServiceProvider
         Route::prefix('api')
             ->middleware('api')
             ->namespace('Modules\Customer\Http\Controllers\Api')
-            ->group(__DIR__ . './../Routes/api.php');
+            ->group(__DIR__ . '/../Routes/api.php');
     }
 }

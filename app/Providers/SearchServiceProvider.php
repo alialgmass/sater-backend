@@ -2,13 +2,13 @@
 
 namespace App\Providers;
 
-use App\Services\Search\SearchService;
-use App\Services\Search\ProductSearchQueryBuilder;
-use App\Services\Search\FilterService;
-use App\Services\Search\SortService;
-use App\Services\Search\SearchHistoryService;
-use App\Services\Search\SearchSuggestionService;
 use Illuminate\Support\ServiceProvider;
+use Modules\Product\Services\Search\FilterService;
+use Modules\Product\Services\Search\ProductSearchQueryBuilder;
+use Modules\Product\Services\Search\SearchHistoryService;
+use Modules\Product\Services\Search\SearchService;
+use Modules\Product\Services\Search\SearchSuggestionService;
+use Modules\Product\Services\Search\SortService;
 
 /**
  * Search Service Provider

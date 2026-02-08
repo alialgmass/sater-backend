@@ -2,14 +2,16 @@
 
 namespace Modules\Auth\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Api\ApiController;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Modules\Auth\DTOs\LoginData;
 use Modules\Auth\DTOs\RegisterCustomerData;
 use Modules\Auth\Http\Requests\LoginRequest;
 use Modules\Auth\Http\Requests\RegisterRequest;
 use Modules\Auth\Services\AuthService;
 
-class AuthController extends Controller
+class AuthController extends ApiController
 {
     public function __construct(
         protected AuthService $authService
@@ -19,33 +21,32 @@ class AuthController extends Controller
     {
         $data = RegisterCustomerData::fromRequest($request);
 
-        $customer = $this->authService->registerCustomer($data);
-
-        $token = $customer->createToken('auth_token')->plainTextToken;
+        $result = $this->authService->register($data);
 
         return response()->json([
             'message' => 'Customer registered successfully.',
-            'data' => [
-                'customer' => $customer,
-                'token' => $token,
-            ],
+            'data' => $result,
         ], 201);
     }
 
-    public function login(LoginRequest $request, \Modules\Auth\Actions\LoginCustomerAction $loginAction): JsonResponse
+    public function login(LoginRequest $request): JsonResponse
     {
-        $data = \Modules\Auth\DTOs\LoginData::fromRequest($request);
+        $data = LoginData::fromRequest($request);
 
-        $customer = $loginAction->execute($data);
-
-        $token = $customer->createToken($data->deviceName)->plainTextToken;
+        $result = $this->authService->login($data);
 
         return response()->json([
             'message' => 'Login successful.',
-            'data' => [
-                'customer' => $customer,
-                'token' => $token,
-            ],
+            'data' => $result,
+        ]);
+    }
+
+    public function logout(Request $request): JsonResponse
+    {
+        $this->authService->logout($request->user());
+
+        return response()->json([
+            'message' => 'Logged out successfully.',
         ]);
     }
 }

@@ -1,10 +1,23 @@
 <?php
 
-namespace App\Services\Search;
+namespace Modules\Product\Services\Search;
 
 use App\DTOs\ProductSearchDTO;
 use Illuminate\Database\Eloquent\Collection;
 use Modules\Product\Models\Product;
+use const Modules\Product\Services\Search\browse;
+use const Modules\Product\Services\Search\catalog;
+use const Modules\Product\Services\Search\children;
+use const Modules\Product\Services\Search\DESC;
+use const Modules\Product\Services\Search\featured_categories;
+use const Modules\Product\Services\Search\id;
+use const Modules\Product\Services\Search\message;
+use const Modules\Product\Services\Search\name;
+use const Modules\Product\Services\Search\our;
+use const Modules\Product\Services\Search\parent_id;
+use const Modules\Product\Services\Search\shop_slug;
+use const Modules\Product\Services\Search\vendor;
+use const Modules\Product\Services\Search\vendor_id;
 
 /**
  * Search suggestion service for "no results" handling

@@ -1,11 +1,20 @@
 {
     "mcpServers": {
         "laravel-boost": {
-            "command": "/home/ali/.config/herd-lite/bin/php",
+            "command": "C:\\Users\\Royal\\.config\\herd\\bin\\php84\\php.exe",
             "args": [
-                "/home/ali/projects/Sater/sater-backend/artisan",
+                "D:\\Projects\\sater-backend\\artisan",
                 "boost:mcp"
             ]
+        },
+        "herd": {
+            "command": "C:\\Users\\Royal\\.config\\herd\\bin\\php84\\php.exe",
+            "args": [
+                "C:/Users/Royal/.config/herd/bin/herd-mcp.phar"
+            ],
+            "env": {
+                "SITE_PATH": "D:\\Projects\\sater-backend"
+            }
         }
     }
 }

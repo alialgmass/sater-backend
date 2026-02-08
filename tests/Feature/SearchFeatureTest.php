@@ -3,10 +3,9 @@
 namespace Tests\Feature\Search;
 
 use App\DTOs\ProductSearchDTO;
-use App\Services\Search\SearchService;
-use App\Models\User;
-use Modules\Product\Models\Product;
 use Modules\Category\Models\Category;
+use Modules\Product\Models\Product;
+use Modules\Product\Services\Search\SearchService;
 use Modules\Vendor\Models\Vendor;
 use Tests\TestCase;
 

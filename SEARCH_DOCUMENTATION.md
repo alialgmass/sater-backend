@@ -327,7 +327,7 @@ When search returns 0 results, suggestions include:
 All services are registered in `SearchServiceProvider`:
 
 ```php
-use App\Services\Search\SearchService;
+use Modules\Product\Services\Search\SearchService;
 
 public function __construct(SearchService $search) {
     $this->search = $search;
