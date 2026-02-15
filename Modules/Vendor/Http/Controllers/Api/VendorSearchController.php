@@ -34,7 +34,11 @@ class VendorSearchController extends ApiController
         // Verify vendor exists and is active
         $vendor = Vendor::where('id', $vendorId)
             ->active()
-            ->firstOr(fn() => $this->notFound('Vendor not found'));
+            ->first();
+
+        if (!$vendor) {
+            return $this->notFound('Vendor not found');
+        }
 
         // Validate request
         $validated = $request->validate(ProductSearchDTO::rules());
@@ -55,7 +59,7 @@ class VendorSearchController extends ApiController
                     'shop_name' => $vendor->shop_name,
                 ],
                 'message' => 'No products found in this store',
-            ])->apiMessage('No products found')->apiResponse(202);
+            ])->apiMessage('No products found')->apiCode(202)->apiResponse();
         }
 
         return $this->apiBody([

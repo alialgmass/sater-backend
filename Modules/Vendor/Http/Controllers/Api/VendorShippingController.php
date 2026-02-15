@@ -2,7 +2,7 @@
 
 namespace Modules\Vendor\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Api\ApiController;
 use App\Enums\Shipping\ShipmentStatus;
 use App\Services\Shipping\ShipmentCreator;
 use Illuminate\Http\Request;
@@ -10,11 +10,13 @@ use Illuminate\Http\JsonResponse;
 use App\Models\Shipping\Shipment;
 use App\Models\Shipping\DeliveryAttempt;
 
-class VendorShippingController extends Controller
+class VendorShippingController extends ApiController
 {
     public function __construct(
         protected ShipmentCreator $shipmentCreator
-    ) {}
+    ) {
+        parent::__construct();
+    }
 
     /**
      * Display a listing of the vendor's shipments.
@@ -28,7 +30,9 @@ class VendorShippingController extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate(15);
 
-        return response()->json($shipments);
+        return $this->apiBody([
+            'shipments' => $shipments
+        ])->apiResponse();
     }
 
     /**
@@ -43,7 +47,9 @@ class VendorShippingController extends Controller
             ->with(['order', 'method', 'attempts'])
             ->firstOrFail();
 
-        return response()->json($shipment);
+        return $this->apiBody([
+            'shipment' => $shipment
+        ])->apiResponse();
     }
 
     /**
@@ -64,10 +70,10 @@ class VendorShippingController extends Controller
         $status = ShipmentStatus::from($request->status);
         $updatedShipment = $this->shipmentCreator->updateShipmentStatus($shipment->id, $status);
 
-        return response()->json([
-            'message' => 'Shipment status updated successfully',
-            'shipment' => $updatedShipment
-        ]);
+        return $this->apiMessage('Shipment status updated successfully')
+            ->apiBody([
+                'shipment' => $updatedShipment
+            ])->apiResponse();
     }
 
     /**
@@ -92,10 +98,10 @@ class VendorShippingController extends Controller
             $request->tracking_number
         );
 
-        return response()->json([
-            'message' => 'Tracking information added successfully',
-            'shipment' => $updatedShipment
-        ]);
+        return $this->apiMessage('Tracking information added successfully')
+            ->apiBody([
+                'shipment' => $updatedShipment
+            ])->apiResponse();
     }
 
     /**
@@ -113,7 +119,9 @@ class VendorShippingController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return response()->json($attempts);
+        return $this->apiBody([
+            'attempts' => $attempts
+        ])->apiResponse();
     }
 
     /**
@@ -129,16 +137,16 @@ class VendorShippingController extends Controller
 
         // Verify this is a COD shipment
         if (!$shipment->method->is_cod) {
-            return response()->json([
-                'error' => 'This shipment is not a COD order'
-            ], 400);
+            return $this->apiMessage('This shipment is not a COD order')
+                ->apiCode(400)
+                ->apiResponse();
         }
 
         $updatedShipment = $this->shipmentCreator->updateShipmentStatus($shipment->id, ShipmentStatus::DELIVERED);
 
-        return response()->json([
-            'message' => 'COD order marked as delivered successfully',
-            'shipment' => $updatedShipment
-        ]);
+        return $this->apiMessage('COD order marked as delivered successfully')
+            ->apiBody([
+                'shipment' => $updatedShipment
+            ])->apiResponse();
     }
 }
