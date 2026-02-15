@@ -2,7 +2,7 @@
 
 namespace Modules\Checkout\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Api\ApiController;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Modules\Checkout\DTOs\CheckoutStartDTO;
@@ -13,7 +13,7 @@ use Modules\Checkout\Services\PaymentService;
 use Modules\Checkout\Models\CheckoutSession;
 use Modules\Cart\Services\CartService;
 
-class CheckoutController extends Controller
+class CheckoutController extends ApiController
 {
     public function __construct(
         protected CheckoutService $checkoutService,
@@ -21,7 +21,9 @@ class CheckoutController extends Controller
         protected CouponService $couponService,
         protected PaymentService $paymentService,
         protected CartService $cartService
-    ) {}
+    ) {
+        parent::__construct();
+    }
 
     public function start(Request $request): JsonResponse
     {
@@ -45,11 +47,13 @@ class CheckoutController extends Controller
             'phone' => $data->phone,
         ]);
 
-        return response()->json([
-            'message' => 'Checkout started successfully.',
-            'session_key' => $session->session_key,
-            'expires_at' => $session->expires_at,
-        ], 201);
+        return $this->apiMessage('Checkout started successfully.')
+            ->apiBody([
+                'session_key' => $session->session_key,
+                'expires_at' => $session->expires_at,
+            ])
+            ->apiCode(201)
+            ->apiResponse();
     }
 
     public function selectAddress(Request $request): JsonResponse
@@ -65,7 +69,8 @@ class CheckoutController extends Controller
         $session = CheckoutSession::where('session_key', $request->session_key)->firstOrFail();
         $this->checkoutService->selectAddress($session, $request->address);
 
-        return response()->json(['message' => 'Address selected successfully.']);
+        return $this->apiMessage('Address selected successfully.')
+            ->apiResponse();
     }
 
     public function selectShipping(Request $request): JsonResponse
@@ -78,7 +83,8 @@ class CheckoutController extends Controller
         $session = CheckoutSession::where('session_key', $request->session_key)->firstOrFail();
         $this->checkoutService->selectShipping($session, $request->shipping_method);
 
-        return response()->json(['message' => 'Shipping method selected successfully.']);
+        return $this->apiMessage('Shipping method selected successfully.')
+            ->apiResponse();
     }
 
     public function selectPayment(Request $request): JsonResponse
@@ -91,7 +97,8 @@ class CheckoutController extends Controller
         $session = CheckoutSession::where('session_key', $request->session_key)->firstOrFail();
         $this->checkoutService->selectPayment($session, $request->payment_method);
 
-        return response()->json(['message' => 'Payment method selected successfully.']);
+        return $this->apiMessage('Payment method selected successfully.')
+            ->apiResponse();
     }
 
     public function applyCoupon(Request $request): JsonResponse
@@ -104,7 +111,8 @@ class CheckoutController extends Controller
         $session = CheckoutSession::where('session_key', $request->session_key)->firstOrFail();
         $this->checkoutService->applyCoupon($session, $request->coupon_code, $this->couponService);
 
-        return response()->json(['message' => 'Coupon applied successfully.']);
+        return $this->apiMessage('Coupon applied successfully.')
+            ->apiResponse();
     }
 
     public function summary(Request $request): JsonResponse
@@ -116,7 +124,8 @@ class CheckoutController extends Controller
         $session = CheckoutSession::where('session_key', $request->session_key)->firstOrFail();
         $summary = $this->checkoutService->getSummary($session);
 
-        return response()->json($summary);
+        return $this->apiBody(['summary' => $summary])
+            ->apiResponse();
     }
 
     public function confirm(Request $request): JsonResponse
@@ -128,7 +137,9 @@ class CheckoutController extends Controller
         $session = CheckoutSession::where('session_key', $request->session_key)->firstOrFail();
 
         if ($session->isExpired()) {
-            return response()->json(['message' => 'Checkout session expired.'], 400);
+            return $this->apiMessage('Checkout session expired.')
+                ->apiCode(400)
+                ->apiResponse();
         }
 
         // Create order with multi-vendor splitting
@@ -139,10 +150,12 @@ class CheckoutController extends Controller
             $this->paymentService->initiatePayment($vendorOrder);
         }
 
-        return response()->json([
-            'message' => 'Order placed successfully.',
-            'order_number' => $masterOrder->order_number,
-            'total' => $masterOrder->total_amount,
-        ], 201);
+        return $this->apiMessage('Order placed successfully.')
+            ->apiBody([
+                'order_number' => $masterOrder->order_number,
+                'total' => $masterOrder->total_amount,
+            ])
+            ->apiCode(201)
+            ->apiResponse();
     }
 }

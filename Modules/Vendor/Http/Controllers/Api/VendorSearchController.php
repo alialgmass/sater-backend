@@ -55,7 +55,7 @@ class VendorSearchController extends ApiController
                     'shop_name' => $vendor->shop_name,
                 ],
                 'message' => 'No products found in this store',
-            ])->message('No products found')->apiResponse(202);
+            ])->apiMessage('No products found')->apiResponse(202);
         }
 
         return $this->apiBody([

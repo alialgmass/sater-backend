@@ -2,7 +2,7 @@
 
 namespace Modules\Cart\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Api\ApiController;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Modules\Cart\Models\Wishlist;
@@ -12,12 +12,14 @@ use Modules\Cart\Services\CartItemService;
 use Modules\Cart\Transformers\WishlistResource;
 use Modules\Product\Models\Product;
 
-class WishlistController extends Controller
+class WishlistController extends ApiController
 {
     public function __construct(
         protected WishlistService $wishlistService,
         protected CartItemService $cartItemService
-    ) {}
+    ) {
+        parent::__construct();
+    }
 
     public function index(Request $request): JsonResponse
     {
@@ -25,7 +27,9 @@ class WishlistController extends Controller
         $wishlist = $this->wishlistService->getOrCreateWishlist($customer);
         $wishlist->load('items.product');
 
-        return response()->json(new WishlistResource($wishlist));
+        return $this->apiBody([
+            'wishlist' => new WishlistResource($wishlist)
+        ])->apiResponse();
     }
 
     public function store(Request $request): JsonResponse
@@ -40,10 +44,10 @@ class WishlistController extends Controller
 
         $item = $this->wishlistService->addItem($wishlist, $product);
 
-        return response()->json([
-            'message' => 'Product added to wishlist.',
-            'data' => $item,
-        ], 201);
+        return $this->apiMessage('Product added to wishlist.')
+            ->apiBody(['wishlist_item' => $item])
+            ->apiCode(201)
+            ->apiResponse();
     }
 
     public function destroy(Request $request, Product $product): JsonResponse
@@ -56,9 +60,8 @@ class WishlistController extends Controller
 
         $this->wishlistService->removeItem($item);
 
-        return response()->json([
-            'message' => 'Product removed from wishlist.',
-        ]);
+        return $this->apiMessage('Product removed from wishlist.')
+            ->apiResponse();
     }
 
     public function share(Request $request): JsonResponse
@@ -68,9 +71,8 @@ class WishlistController extends Controller
 
         $shareUrl = $this->wishlistService->generateShareableLink($wishlist);
 
-        return response()->json([
-            'share_url' => $shareUrl,
-        ]);
+        return $this->apiBody(['share_url' => $shareUrl])
+            ->apiResponse();
     }
 
     public function viewShared(string $token): JsonResponse
@@ -78,7 +80,9 @@ class WishlistController extends Controller
         $wishlist = Wishlist::where('share_token', $token)->firstOrFail();
         $wishlist->load('items.product');
 
-        return response()->json(new WishlistResource($wishlist));
+        return $this->apiBody([
+            'wishlist' => new WishlistResource($wishlist)
+        ])->apiResponse();
     }
 
     public function moveToCart(Request $request, Product $product): JsonResponse
@@ -91,9 +95,8 @@ class WishlistController extends Controller
 
         $cartItem = $this->wishlistService->moveToCart($item, $customer, $this->cartItemService);
 
-        return response()->json([
-            'message' => 'Product moved to cart.',
-            'data' => $cartItem,
-        ]);
+        return $this->apiMessage('Product moved to cart.')
+            ->apiBody(['cart_item' => $cartItem])
+            ->apiResponse();
     }
 }

@@ -17,7 +17,9 @@ class ProfileController extends ApiController
     public function __construct(
         protected ProfileService $profileService,
         protected AccountDeletionService $accountDeletionService
-    ) {}
+    ) {
+        parent::__construct();
+    }
 
     public function show(Request $request): JsonResponse
     {
@@ -26,7 +28,9 @@ class ProfileController extends ApiController
 
         $profile = $this->profileService->getProfile($customer);
 
-        return response()->json(new CustomerProfileResource($profile));
+        return $this->apiBody([
+            'profile' => new CustomerProfileResource($profile)
+        ])->apiResponse();
     }
 
     public function update(UpdateProfileRequest $request): JsonResponse
@@ -37,10 +41,9 @@ class ProfileController extends ApiController
         $data = UpdateProfileData::fromRequest($request);
         $profile = $this->profileService->updateProfile($customer, $data);
 
-        return response()->json([
-            'message' => 'Profile updated successfully.',
-            'data' => new CustomerProfileResource($profile),
-        ]);
+        return $this->apiMessage('Profile updated successfully.')
+            ->apiBody(['profile' => new CustomerProfileResource($profile)])
+            ->apiResponse();
     }
 
     public function deleteAccount(Request $request): JsonResponse
@@ -48,13 +51,12 @@ class ProfileController extends ApiController
          $customer = $request->user();
          // self authorization or dedicated policy
          if ($customer->id !== auth()->id()) {
-             abort(403);
+             return $this->unauthorized('Access denied');
          }
 
          $this->accountDeletionService->deleteAccount($customer);
 
-         return response()->json([
-             'message' => 'Account deleted successfully.'
-         ]);
+         return $this->apiMessage('Account deleted successfully.')
+             ->apiResponse();
     }
 }

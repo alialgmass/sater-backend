@@ -2,22 +2,24 @@
 
 namespace Modules\Payment\Http\Controllers\Api;
 
+use App\Http\Controllers\Api\ApiController;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Routing\Controller;
 use Modules\Payment\Actions\InitiatePaymentAction;
 use Modules\Payment\Actions\VerifyPaymentAction;
 use Modules\Payment\DTOs\PaymentInitiationDTO;
 use Modules\Payment\Services\PaymentService;
 use Illuminate\Support\Facades\Validator;
 
-class PaymentController extends Controller
+class PaymentController extends ApiController
 {
     public function __construct(
         protected InitiatePaymentAction $initiatePaymentAction,
         protected VerifyPaymentAction $verifyPaymentAction,
         protected PaymentService $paymentService
-    ) {}
+    ) {
+        parent::__construct();
+    }
 
     /**
      * Initiate a payment
@@ -45,11 +47,10 @@ class PaymentController extends Controller
             ]);
 
             if ($validator->fails()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Validation failed',
-                    'errors' => $validator->errors(),
-                ], 422);
+                return $this->apiMessage('Validation failed')
+                    ->apiBody(['errors' => $validator->errors()])
+                    ->apiCode(422)
+                    ->apiResponse();
             }
 
             // Create DTO from request
@@ -58,13 +59,12 @@ class PaymentController extends Controller
             // Execute the action
             $result = $this->initiatePaymentAction->execute($dto);
 
-            return response()->json($result);
+            return $this->apiBody($result)->apiResponse();
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Payment initiation failed',
-                'error' => $e->getMessage(),
-            ], 500);
+            return $this->apiMessage('Payment initiation failed')
+                ->apiBody(['error' => $e->getMessage()])
+                ->apiCode(500)
+                ->apiResponse();
         }
     }
 
@@ -84,11 +84,10 @@ class PaymentController extends Controller
             ]);
 
             if ($validator->fails()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Validation failed',
-                    'errors' => $validator->errors(),
-                ], 422);
+                return $this->apiMessage('Validation failed')
+                    ->apiBody(['errors' => $validator->errors()])
+                    ->apiCode(422)
+                    ->apiResponse();
             }
 
             // Create DTO from request
@@ -97,13 +96,12 @@ class PaymentController extends Controller
             // Execute the action
             $result = $this->verifyPaymentAction->execute($dto);
 
-            return response()->json($result);
+            return $this->apiBody($result)->apiResponse();
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Payment verification failed',
-                'error' => $e->getMessage(),
-            ], 500);
+            return $this->apiMessage('Payment verification failed')
+                ->apiBody(['error' => $e->getMessage()])
+                ->apiCode(500)
+                ->apiResponse();
         }
     }
 
@@ -116,16 +114,15 @@ class PaymentController extends Controller
             $result = $this->paymentService->getPaymentStatusByOrderNumber($orderNumber);
 
             if (!$result['success']) {
-                return response()->json($result, 404);
+                $this->apiCode(404);
             }
 
-            return response()->json($result);
+            return $this->apiBody($result)->apiResponse();
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to get payment status',
-                'error' => $e->getMessage(),
-            ], 500);
+            return $this->apiMessage('Failed to get payment status')
+                ->apiBody(['error' => $e->getMessage()])
+                ->apiCode(500)
+                ->apiResponse();
         }
     }
 
@@ -138,11 +135,11 @@ class PaymentController extends Controller
             // Process the webhook
             $result = $this->paymentService->handleWebhook($gateway, $request->all());
 
-            if ($result['success']) {
-                return response()->json($result, 200);
-            } else {
-                return response()->json($result, 400);
+            if (!$result['success']) {
+                $this->apiCode(400);
             }
+
+            return $this->apiBody($result)->apiResponse();
         } catch (\Exception $e) {
             \Log::error('Webhook processing failed', [
                 'error' => $e->getMessage(),
@@ -150,10 +147,9 @@ class PaymentController extends Controller
                 'payload' => $request->all(),
             ]);
 
-            return response()->json([
-                'success' => false,
-                'message' => 'Webhook processing failed',
-            ], 500);
+            return $this->apiMessage('Webhook processing failed')
+                ->apiCode(500)
+                ->apiResponse();
         }
     }
 
@@ -165,11 +161,9 @@ class PaymentController extends Controller
         // This endpoint handles successful payment redirects
         $sessionId = $request->get('session_id');
         
-        return response()->json([
-            'success' => true,
-            'message' => 'Payment successful',
-            'session_id' => $sessionId,
-        ]);
+        return $this->apiMessage('Payment successful')
+            ->apiBody(['session_id' => $sessionId])
+            ->apiResponse();
     }
 
     /**
@@ -178,9 +172,8 @@ class PaymentController extends Controller
     public function cancelCallback(Request $request): JsonResponse
     {
         // This endpoint handles cancelled payments
-        return response()->json([
-            'success' => false,
-            'message' => 'Payment was cancelled',
-        ]);
+        return $this->apiMessage('Payment was cancelled')
+            ->apiBody(['success' => false])
+            ->apiResponse();
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Modules\Cart\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Api\ApiController;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -18,14 +18,16 @@ use Modules\Cart\Services\StockValidationService;
 use Modules\Cart\Transformers\CartResource;
 use Modules\Cart\Transformers\CartItemResource;
 
-class CartController extends Controller
+class CartController extends ApiController
 {
     public function __construct(
         protected CartService $cartService,
         protected CartItemService $cartItemService,
         protected CartPricingService $pricingService,
         protected StockValidationService $stockValidation
-    ) {}
+    ) {
+        parent::__construct();
+    }
 
     public function index(Request $request): JsonResponse
     {
@@ -42,11 +44,11 @@ class CartController extends Controller
         } else {
             // Guest user
             if (!$cartKey) {
-                return response()->json([
+                return $this->apiBody([
                     'items' => [],
                     'items_count' => 0,
                     'totals' => null,
-                ]);
+                ])->apiResponse();
             }
             
             $items = $this->cartService->getGuestCart($cartKey);
@@ -58,7 +60,11 @@ class CartController extends Controller
         // Calculate totals
         $totals = $this->pricingService->calculateCartTotals($items);
 
-        return response()->json(new CartResource($items, $totals));
+        $cartData = new CartResource($items, $totals);
+
+        return $this->apiBody([
+            'cart' => $cartData
+        ])->apiResponse();
     }
 
     public function add(AddToCartRequest $request): JsonResponse
@@ -83,52 +89,48 @@ class CartController extends Controller
 
         $item = $this->cartItemService->addItem($cart, $data);
 
-        return response()->json([
-            'message' => 'Item added to cart successfully.',
-            'data' => new CartItemResource($item),
-            'cart_key' => $user ? null : ($data->cart_key ?? $cartKey),
-        ], 201);
+        return $this->apiMessage('Item added to cart successfully.')
+            ->apiBody([
+                'cart_item' => new CartItemResource($item),
+                'cart_key' => $user ? null : ($data->cart_key ?? $cartKey),
+            ])
+            ->apiCode(201)
+            ->apiResponse();
     }
 
     public function updateItem(UpdateCartItemRequest $request, CartItem $item): JsonResponse
     {
-      
-
         $data = UpdateCartItemData::fromRequest($request);
         $updatedItem = $this->cartItemService->updateQuantity($item, $data->quantity);
 
         if ($data->quantity <= 0) {
-            return response()->json([
-                'message' => 'Item removed from cart.',
-            ]);
+            return $this->apiMessage('Item removed from cart.')
+                ->apiResponse();
         }
 
-        return response()->json([
-            'message' => 'Cart item updated successfully.',
-            'data' => new CartItemResource($updatedItem),
-        ]);
+        return $this->apiMessage('Cart item updated successfully.')
+            ->apiBody([
+                'cart_item' => new CartItemResource($updatedItem)
+            ])
+            ->apiResponse();
     }
 
     public function removeItem(Request $request, CartItem $item): JsonResponse
     {
-      
-
         $this->cartItemService->removeItem($item);
 
-        return response()->json([
-            'message' => 'Item removed from cart successfully.',
-        ]);
+        return $this->apiMessage('Item removed from cart successfully.')
+            ->apiResponse();
     }
 
     public function saveForLater(Request $request, CartItem $item): JsonResponse
     {
-      
-
         $savedItem = $this->cartItemService->saveForLater($item);
 
-        return response()->json([
-            'message' => 'Item saved for later.',
-            'data' => $savedItem,
-        ]);
+        return $this->apiMessage('Item saved for later.')
+            ->apiBody([
+                'saved_item' => $savedItem
+            ])
+            ->apiResponse();
     }
 }

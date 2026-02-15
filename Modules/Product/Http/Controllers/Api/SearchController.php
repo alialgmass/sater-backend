@@ -184,7 +184,9 @@ class SearchController extends ApiController
      */
     public function history(Request $request)
     {
-        $request->user() ?? $this->unauthorized('Authentication required');
+        if (!$request->user()) {
+            return $this->unauthorized('Authentication required');
+        }
 
         $limit = min((int) $request->get('limit', 20), 100);
 
@@ -204,7 +206,9 @@ class SearchController extends ApiController
      */
     public function clearHistory(Request $request)
     {
-        $request->user() ?? $this->unauthorized('Authentication required');
+        if (!$request->user()) {
+            return $this->unauthorized('Authentication required');
+        }
 
         $this->historyService->clearHistory($request->user());
 
@@ -220,7 +224,9 @@ class SearchController extends ApiController
      */
     public function deleteHistory(Request $request, int $id)
     {
-        $request->user() ?? $this->unauthorized('Authentication required');
+        if (!$request->user()) {
+            return $this->unauthorized('Authentication required');
+        }
 
         $deleted = $this->historyService->deleteEntry($request->user(), $id);
 

@@ -2,7 +2,7 @@
 
 namespace Modules\Order\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Api\ApiController;
 use Illuminate\Http\Request;
 use Modules\Order\Http\Resources\OrderDetailResource;
 use Modules\Order\Http\Resources\OrderListResource;
@@ -11,7 +11,7 @@ use Modules\Order\Services\OrderQueryService;
 use Modules\Order\Services\ReorderService;
 use Modules\Order\Services\InvoiceService;
 
-class OrderController extends Controller
+class OrderController extends ApiController
 {
     protected $orderQueryService;
     protected $orderCancellationService;
@@ -24,6 +24,7 @@ class OrderController extends Controller
         ReorderService $reorderService,
         InvoiceService $invoiceService
     ) {
+        parent::__construct();
         $this->orderQueryService = $orderQueryService;
         $this->orderCancellationService = $orderCancellationService;
         $this->reorderService = $reorderService;
@@ -33,42 +34,46 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         $orders = $this->orderQueryService->getPaginatedOrdersForCustomer($request->user());
-        return OrderListResource::collection($orders);
+        
+        return $this->apiBody([
+            'orders' => OrderListResource::collection($orders)
+        ])->apiResponse();
     }
 
     public function show(Request $request, $orderNumber)
     {
         $order = $this->orderQueryService->getOrderByOrderNumberForCustomer($request->user(), $orderNumber);
       
-        return new OrderDetailResource($order);
+        return $this->apiBody([
+            'order' => new OrderDetailResource($order)
+        ])->apiResponse();
     }
 
     public function cancel(Request $request, $orderNumber)
     {
         $order = $this->orderQueryService->getOrderByOrderNumberForCustomer($request->user(), $orderNumber);
       
-
         $vendorOrderIds = $request->input('vendor_order_ids', []);
         $this->orderCancellationService->cancelOrder($order, $vendorOrderIds);
 
-        return response()->json(['message' => 'Order cancellation request processed.']);
+        return $this->apiMessage('Order cancellation request processed.')
+            ->apiResponse();
     }
 
     public function reorder(Request $request, $orderNumber)
     {
         $order = $this->orderQueryService->getOrderByOrderNumberForCustomer($request->user(), $orderNumber);
-    
         
         $result = $this->reorderService->reorder($order);
 
-        return response()->json($result);
+        return $this->apiBody(['reorder' => $result])
+            ->apiResponse();
     }
 
     public function invoice(Request $request, $orderNumber)
     {
         $order = $this->orderQueryService->getOrderByOrderNumberForCustomer($request->user(), $orderNumber);
        
-
         return $this->invoiceService->generate($order)->download();
     }
 }

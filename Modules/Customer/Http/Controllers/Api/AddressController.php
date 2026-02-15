@@ -2,7 +2,7 @@
 
 namespace Modules\Customer\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Api\ApiController;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Modules\Customer\DTOs\CreateAddressData;
@@ -11,16 +11,21 @@ use Modules\Customer\Services\AddressService;
 use Modules\Customer\Transformers\CustomerAddressResource;
 use Modules\Customer\Models\CustomerAddress;
 
-class AddressController extends Controller
+class AddressController extends ApiController
 {
     public function __construct(
         protected AddressService $addressService
-    ) {}
+    ) {
+        parent::__construct();
+    }
 
     public function index(Request $request): JsonResponse
     {
         $addresses = $request->user()->addresses;
-        return response()->json(CustomerAddressResource::collection($addresses));
+        
+        return $this->apiBody([
+            'addresses' => CustomerAddressResource::collection($addresses)
+        ])->apiResponse();
     }
 
     public function store(AddressRequest $request): JsonResponse
@@ -28,10 +33,10 @@ class AddressController extends Controller
         $data = CreateAddressData::fromRequest($request);
         $address = $this->addressService->createAddress($request->user(), $data);
 
-        return response()->json([
-            'message' => 'Address added successfully.',
-            'data' => new CustomerAddressResource($address),
-        ], 201);
+        return $this->apiMessage('Address added successfully.')
+            ->apiBody(['address' => new CustomerAddressResource($address)])
+            ->apiCode(201)
+            ->apiResponse();
     }
 
     public function update(AddressRequest $request, CustomerAddress $address): JsonResponse
@@ -41,10 +46,9 @@ class AddressController extends Controller
         $data = CreateAddressData::fromRequest($request); // Reuse generic DTO or create specific one
         $updatedAddress = $this->addressService->updateAddress($request->user(), $address, $data);
 
-        return response()->json([
-            'message' => 'Address updated successfully.',
-            'data' => new CustomerAddressResource($updatedAddress),
-        ]);
+        return $this->apiMessage('Address updated successfully.')
+            ->apiBody(['address' => new CustomerAddressResource($updatedAddress)])
+            ->apiResponse();
     }
 
     public function destroy(Request $request, CustomerAddress $address): JsonResponse
@@ -53,8 +57,7 @@ class AddressController extends Controller
         
         $this->addressService->deleteAddress($request->user(), $address);
 
-        return response()->json([
-            'message' => 'Address deleted successfully.',
-        ]);
+        return $this->apiMessage('Address deleted successfully.')
+            ->apiResponse();
     }
 }

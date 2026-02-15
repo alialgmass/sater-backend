@@ -7,6 +7,7 @@ use App\Actions\BulkVendorOrderAction;
 use App\Actions\GeneratePackingSlipAction;
 use App\Actions\UpdateVendorOrderStatusAction;
 use App\Enums\FulfillmentActionEnum;
+use App\Http\Controllers\Api\ApiController;
 use App\Http\Controllers\Controller;
 use App\Services\OrderExportService;
 use App\Services\VendorOrderQueryService;
@@ -19,12 +20,14 @@ use Modules\Order\Http\Resources\VendorOrderDetailResource;
 use Modules\Order\Http\Resources\VendorOrderListResource;
 use Modules\Order\Models\VendorOrder;
 
-class VendorOrderController extends Controller
+class VendorOrderController extends ApiController
 {
     public function __construct(
         protected VendorOrderQueryService $vendorOrderQueryService,
         protected OrderExportService $orderExportService
-    ) {}
+    ) {
+        parent::__construct();
+    }
 
     /**
      * Display a listing of the vendor orders.
@@ -45,7 +48,9 @@ class VendorOrderController extends Controller
             array_filter($filters, fn($value) => $value !== null && $value !== '')
         );
 
-        return response()->json(VendorOrderListResource::collection($vendorOrders));
+        return $this->apiBody([
+            'vendor_orders' => VendorOrderListResource::collection($vendorOrders)
+        ])->apiResponse();
     }
 
     /**
@@ -59,12 +64,14 @@ class VendorOrderController extends Controller
         );
 
         if (!$vendorOrder) {
-            return response()->json(['error' => 'Vendor order not found'], 404);
+            return $this->notFound('Vendor order not found');
         }
 
         $this->authorize('view', $vendorOrder);
 
-        return response()->json(new VendorOrderDetailResource($vendorOrder));
+        return $this->apiBody([
+            'vendor_order' => new VendorOrderDetailResource($vendorOrder)
+        ])->apiResponse();
     }
 
     /**
@@ -77,7 +84,10 @@ class VendorOrderController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+            return $this->apiMessage('Validation failed')
+                ->apiBody(['errors' => $validator->errors()])
+                ->apiCode(422)
+                ->apiResponse();
         }
 
         $vendorOrder = $this->vendorOrderQueryService->getVendorOrderByNumber(
@@ -86,7 +96,7 @@ class VendorOrderController extends Controller
         );
 
         if (!$vendorOrder) {
-            return response()->json(['error' => 'Vendor order not found'], 404);
+            return $this->notFound('Vendor order not found');
         }
 
         $this->authorize('updateStatus', $vendorOrder);
@@ -98,15 +108,20 @@ class VendorOrderController extends Controller
             $success = $updateStatusAction->execute($vendorOrder, $newStatus);
 
             if (!$success) {
-                return response()->json(['error' => 'Invalid status transition'], 400);
+                return $this->apiMessage('Invalid status transition')
+                    ->apiCode(400)
+                    ->apiResponse();
             }
 
-            return response()->json([
-                'message' => 'Vendor order status updated successfully',
-                'vendor_order' => new VendorOrderDetailResource($vendorOrder->refresh())
-            ]);
+            return $this->apiMessage('Vendor order status updated successfully')
+                ->apiBody([
+                    'vendor_order' => new VendorOrderDetailResource($vendorOrder->refresh())
+                ])
+                ->apiResponse();
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 400);
+            return $this->apiMessage($e->getMessage())
+                ->apiCode(400)
+                ->apiResponse();
         }
     }
 
@@ -122,7 +137,10 @@ class VendorOrderController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+            return $this->apiMessage('Validation failed')
+                ->apiBody(['errors' => $validator->errors()])
+                ->apiCode(422)
+                ->apiResponse();
         }
 
         $vendorOrder = $this->vendorOrderQueryService->getVendorOrderByNumber(
@@ -131,7 +149,7 @@ class VendorOrderController extends Controller
         );
 
         if (!$vendorOrder) {
-            return response()->json(['error' => 'Vendor order not found'], 404);
+            return $this->notFound('Vendor order not found');
         }
 
         $this->authorize('addShippingInfo', $vendorOrder);
@@ -144,10 +162,9 @@ class VendorOrderController extends Controller
             $request->input('tracking_url')
         );
 
-        return response()->json([
-            'message' => 'Shipping information added successfully',
-            'shipment' => $shipment
-        ]);
+        return $this->apiMessage('Shipping information added successfully')
+            ->apiBody(['shipment' => $shipment])
+            ->apiResponse();
     }
 
     /**
@@ -165,7 +182,10 @@ class VendorOrderController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+            return $this->apiMessage('Validation failed')
+                ->apiBody(['errors' => $validator->errors()])
+                ->apiCode(422)
+                ->apiResponse();
         }
 
         $action = FulfillmentActionEnum::from(str_replace('_', '-', $request->input('action')));
@@ -182,7 +202,9 @@ class VendorOrderController extends Controller
         $foundCount = $vendorOrders->count();
 
         if ($requestedCount !== $foundCount) {
-            return response()->json(['error' => 'Some vendor orders not found or do not belong to you'], 400);
+            return $this->apiMessage('Some vendor orders not found or do not belong to you')
+                ->apiCode(400)
+                ->apiResponse();
         }
 
         $data = [
@@ -194,16 +216,15 @@ class VendorOrderController extends Controller
         $bulkAction = app(BulkVendorOrderAction::class);
         $results = $bulkAction->execute($vendorOrders->pluck('id')->toArray(), $action, $data);
 
-        return response()->json([
-            'message' => 'Bulk action completed',
-            'results' => $results
-        ]);
+        return $this->apiMessage('Bulk action completed')
+            ->apiBody(['results' => $results])
+            ->apiResponse();
     }
 
     /**
      * Generate packing slip for the specified vendor order.
      */
-    public function packingSlip(string $vendorOrderNumber): Response
+    public function packingSlip(string $vendorOrderNumber)
     {
         $vendorOrder = $this->vendorOrderQueryService->getVendorOrderByNumber(
             request()->user()->id,
@@ -211,7 +232,7 @@ class VendorOrderController extends Controller
         );
 
         if (!$vendorOrder) {
-            return response()->json(['error' => 'Vendor order not found'], 404);
+            return $this->notFound('Vendor order not found');
         }
 
         $this->authorize('generatePackingSlip', $vendorOrder);
@@ -223,7 +244,7 @@ class VendorOrderController extends Controller
     /**
      * Export vendor orders.
      */
-    public function export(Request $request): \Symfony\Component\HttpFoundation\BinaryFileResponse
+    public function export(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'format' => 'required|string|in:csv,xlsx',
@@ -232,7 +253,10 @@ class VendorOrderController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+            return $this->apiMessage('Validation failed')
+                ->apiBody(['errors' => $validator->errors()])
+                ->apiCode(422)
+                ->apiResponse();
         }
 
         $format = $request->input('format', 'csv');
