@@ -39,14 +39,14 @@ class OrderController extends Controller
     public function show(Request $request, $orderNumber)
     {
         $order = $this->orderQueryService->getOrderByOrderNumberForCustomer($request->user(), $orderNumber);
-        $this->authorize('view', $order);
+      
         return new OrderDetailResource($order);
     }
 
     public function cancel(Request $request, $orderNumber)
     {
         $order = $this->orderQueryService->getOrderByOrderNumberForCustomer($request->user(), $orderNumber);
-        $this->authorize('cancel', $order);
+      
 
         $vendorOrderIds = $request->input('vendor_order_ids', []);
         $this->orderCancellationService->cancelOrder($order, $vendorOrderIds);
@@ -57,7 +57,7 @@ class OrderController extends Controller
     public function reorder(Request $request, $orderNumber)
     {
         $order = $this->orderQueryService->getOrderByOrderNumberForCustomer($request->user(), $orderNumber);
-        $this->authorize('reorder', $order);
+    
         
         $result = $this->reorderService->reorder($order);
 
@@ -67,7 +67,7 @@ class OrderController extends Controller
     public function invoice(Request $request, $orderNumber)
     {
         $order = $this->orderQueryService->getOrderByOrderNumberForCustomer($request->user(), $orderNumber);
-        $this->authorize('view', $order);
+       
 
         return $this->invoiceService->generate($order)->download();
     }

@@ -36,4 +36,9 @@ class Customer extends Authenticatable
     {
         return $this->hasOne(\Modules\Customer\Models\ProfilePrivacySetting::class);
     }
+
+    public function orders()
+    {
+        return $this->hasMany(\Modules\Order\Models\Order::class);
+    }
 }

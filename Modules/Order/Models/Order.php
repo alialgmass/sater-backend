@@ -1,12 +1,13 @@
 <?php
 
+
 namespace Modules\Order\Models;
 
-use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Modules\Auth\Models\Customer;
 use Modules\Order\Enums\OrderStatusEnum;
 use Modules\Order\Enums\PaymentStatusEnum;
 use Modules\Order\Database\Factories\OrderFactory;
@@ -18,8 +19,14 @@ class Order extends Model
     protected $fillable = [
         'customer_id',
         'order_number',
+        'parent_order_id',
+        'vendor_id',
+        'email',
+        'phone',
         'total_amount',
         'shipping_fees',
+        'tax',
+        'discount',
         'payment_method',
         'payment_status',
         'status',
@@ -36,7 +43,7 @@ class Order extends Model
 
     public function customer(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'customer_id');
+        return $this->belongsTo(Customer::class, 'customer_id');
     }
 
     public function vendorOrders(): HasMany

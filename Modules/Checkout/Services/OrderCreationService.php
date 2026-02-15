@@ -42,6 +42,9 @@ class OrderCreationService
             // Transfer coupons to master order
             $session->appliedCoupons()->update(['master_order_id' => $masterOrder->id]);
 
+            // Clear the cart after successful order
+            $this->clearCart($session);
+
             return $masterOrder->load('vendorOrders.items');
         });
     }
@@ -126,6 +129,7 @@ class OrderCreationService
                 OrderItem::create([
                     'order_id' => $vendorOrder->id,
                     'product_id' => $item->product_id,
+                    'product_name' => $item->product->name,
                     'vendor_id' => $vendorId,
                     'quantity' => $item->quantity,
                     'price' => $item->product->price,
@@ -163,5 +167,17 @@ class OrderCreationService
     protected function generateOrderNumber(): string
     {
         return 'ORD-' . strtoupper(Str::random(10));
+    }
+
+    protected function clearCart(CheckoutSession $session): void
+    {
+        if ($session->customer_id) {
+            $cart = \Modules\Cart\Models\Cart::where('customer_id', $session->customer_id)->first();
+            if ($cart) {
+                $cart->items()->delete();
+            }
+        } else {
+            \Modules\Cart\Models\GuestCart::byCartKey($session->cart_key)->delete();
+        }
     }
 }

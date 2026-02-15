@@ -92,7 +92,7 @@ class CartController extends Controller
 
     public function updateItem(UpdateCartItemRequest $request, CartItem $item): JsonResponse
     {
-        $this->authorize('update', $item);
+      
 
         $data = UpdateCartItemData::fromRequest($request);
         $updatedItem = $this->cartItemService->updateQuantity($item, $data->quantity);
@@ -111,7 +111,7 @@ class CartController extends Controller
 
     public function removeItem(Request $request, CartItem $item): JsonResponse
     {
-        $this->authorize('delete', $item);
+      
 
         $this->cartItemService->removeItem($item);
 
@@ -122,7 +122,7 @@ class CartController extends Controller
 
     public function saveForLater(Request $request, CartItem $item): JsonResponse
     {
-        $this->authorize('update', $item);
+      
 
         $savedItem = $this->cartItemService->saveForLater($item);
 

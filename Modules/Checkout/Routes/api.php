@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Modules\Checkout\Http\Controllers\Api\CheckoutController;
 
-Route::prefix('checkout')->group(function () {
+Route::prefix('checkout')->middleware('auth:sanctum')->group(function () {
     Route::post('/start', [CheckoutController::class, 'start'])->name('checkout.start');
     Route::post('/address', [CheckoutController::class, 'selectAddress'])->name('checkout.address');
     Route::post('/shipping', [CheckoutController::class, 'selectShipping'])->name('checkout.shipping');
