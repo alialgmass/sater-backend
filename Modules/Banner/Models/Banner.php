@@ -70,7 +70,13 @@ class Banner extends Model implements HasMedia
      */
     public function getFullImageUrlAttribute(): ?string
     {
-        return $this->getFirstMediaUrl('banners');
+        $url = $this->getFirstMediaUrl('banners');
+        
+        if (empty($url)) {
+            return null;
+        }
+
+        return str_starts_with($url, 'http') ? $url : url($url);
     }
 
     /**
