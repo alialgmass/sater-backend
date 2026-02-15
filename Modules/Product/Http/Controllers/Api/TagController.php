@@ -2,15 +2,15 @@
 
 namespace Modules\Product\Http\Controllers\Api;
 
-use Illuminate\Routing\Controller;
+use App\Http\Controllers\Api\ApiController;
 use Modules\Product\Models\Tag;
 
-class TagController extends Controller
+class TagController extends ApiController
 {
     public function index()
     {
-        return response()->json([
-            'data' => Tag::select('id', 'name', 'slug')->get()
-        ]);
+        return $this->apiBody([
+            'tags' => Tag::select('id', 'name', 'slug')->get()
+        ])->apiResponse();
     }
 }

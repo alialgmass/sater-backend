@@ -23,10 +23,10 @@ class AuthController extends ApiController
 
         $result = $this->authService->register($data);
 
-        return response()->json([
-            'message' => 'Customer registered successfully.',
-            'data' => $result,
-        ], 201);
+        return $this->apiMessage('Customer registered successfully.')
+            ->apiBody(['auth' => $result])
+            ->apiCode(201)
+            ->apiResponse();
     }
 
     public function login(LoginRequest $request): JsonResponse
@@ -35,18 +35,16 @@ class AuthController extends ApiController
 
         $result = $this->authService->login($data);
 
-        return response()->json([
-            'message' => 'Login successful.',
-            'data' => $result,
-        ]);
+        return $this->apiMessage('Login successful.')
+            ->apiBody(['auth' => $result])
+            ->apiResponse();
     }
 
     public function logout(Request $request): JsonResponse
     {
         $this->authService->logout($request->user());
 
-        return response()->json([
-            'message' => 'Logged out successfully.',
-        ]);
+        return $this->apiMessage('Logged out successfully.')
+            ->apiResponse();
     }
 }

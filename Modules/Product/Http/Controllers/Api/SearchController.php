@@ -88,8 +88,9 @@ class SearchController extends ApiController
                 ],
                 'suggestions' => $suggestions,
             ])
-            ->message('No products found. Check suggestions.')
-            ->apiResponse(202); // Accepted but no content in body
+            ->apiMessage('No products found. Check suggestions.')
+            ->apiCode(202)
+            ->apiResponse(); // Accepted but no content in body
         }
 
         return $this->apiBody([
@@ -122,7 +123,7 @@ class SearchController extends ApiController
                 $request->user(),
                 $dto->query,
                 $dto->getGeneralFilters(),
-                $results->count()
+                count($results->items())
             );
         }
 

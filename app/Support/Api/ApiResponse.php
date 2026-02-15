@@ -67,6 +67,16 @@ trait ApiResponse
         return $this;
     }
 
+    protected function unauthorized(string $message = 'Unauthorized'): \Illuminate\Http\JsonResponse
+    {
+        return $this->apiCode(401)->apiMessage($message)->apiResponse();
+    }
+
+    protected function notFound(string $message = 'Resource not found'): \Illuminate\Http\JsonResponse
+    {
+        return $this->apiCode(404)->apiMessage($message)->apiResponse();
+    }
+
     /**
      * @deprecated
      */

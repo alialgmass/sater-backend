@@ -2,15 +2,15 @@
 
 namespace Modules\Product\Http\Controllers\Api;
 
-use Illuminate\Routing\Controller;
+use App\Http\Controllers\Api\ApiController;
 use Modules\Product\Models\Size;
 
-class SizeController extends Controller
+class SizeController extends ApiController
 {
     public function index()
     {
-        return response()->json([
-            'data' => Size::select('id', 'name', 'abbreviation')->get()
-        ]);
+        return $this->apiBody([
+            'sizes' => Size::select('id', 'name', 'abbreviation')->get()
+        ])->apiResponse();
     }
 }
