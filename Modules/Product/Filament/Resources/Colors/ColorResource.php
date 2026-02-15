@@ -17,8 +17,8 @@ class ColorResource extends Resource
 {
     protected static ?string $model = Color::class;
 
-    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-swatch';
-    protected static string|BackedEnum|null $navigationGroup = 'Product Management';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-swatch';
+    protected static string|\UnitEnum|null $navigationGroup = 'Product Management';
 
     public static function form(Schema $schema): Schema
     {

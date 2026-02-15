@@ -15,8 +15,8 @@ class SizeResource extends Resource
 {
     protected static ?string $model = Size::class;
 
-    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-arrows-pointing-out';
-    protected static string|BackedEnum|null $navigationGroup = 'Product Management';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-arrows-pointing-out';
+    protected static string|\UnitEnum|null $navigationGroup = 'Product Management';
 
     public static function form(Schema $schema): Schema
     {
