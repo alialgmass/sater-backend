@@ -135,6 +135,37 @@ class ProductForm
                      
                 ]),
                 Tab::make('Attributes')->schema([
+                    Select::make('colors')
+                        ->relationship('colors', 'name')
+                        ->multiple()
+                        ->preload()
+                        ->createOptionForm([
+                            TextInput::make('name')
+                                ->required(),
+                            ColorPicker::make('hex_code')
+                                ->required(),
+                        ]),
+                    Select::make('sizes')
+                        ->relationship('sizes', 'name')
+                        ->multiple()
+                        ->preload()
+                        ->createOptionForm([
+                            TextInput::make('name')
+                                ->required(),
+                            TextInput::make('abbreviation'),
+                        ]),
+                    Select::make('tags')
+                        ->relationship('tags', 'name')
+                        ->multiple()
+                        ->preload()
+                        ->createOptionForm([
+                            TextInput::make('name')
+                                ->required()
+                                ->live(onBlur: true)
+                                ->afterStateUpdated(fn (string $operation, $state, $set) => $set('slug', \Illuminate\Support\Str::slug($state))),
+                            TextInput::make('slug')
+                                ->required(),
+                        ]),
                     Repeater::make('attributes')
                         ->label('Product Attributes')
                         ->schema([

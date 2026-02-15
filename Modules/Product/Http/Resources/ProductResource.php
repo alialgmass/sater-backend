@@ -23,6 +23,9 @@ class ProductResource extends JsonResource
             'discounted_price' => $this->discounted_price,
             'stock' => $this->stock,
             'status' => $this->status,
+            'colors' => $this->colors->map(fn($color) => $color->only(['id', 'name', 'hex_code'])),
+            'sizes' => $this->sizes->map(fn($size) => $size->only(['id', 'name', 'abbreviation'])),
+            'tags' => $this->tags->map(fn($tag) => $tag->only(['id', 'name', 'slug'])),
             'attributes' => $this->attributes,
             'vendor' => [
                 'id' => $this->vendor_id,

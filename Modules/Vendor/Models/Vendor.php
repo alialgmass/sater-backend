@@ -20,6 +20,11 @@ class Vendor extends Authenticatable implements HasMedia, FilamentUser
 {
     use HasFactory, SoftDeletes, InteractsWithMedia, HasRoles;
 
+    protected static function newFactory()
+    {
+        return \Modules\Vendor\Database\Factories\VendorFactory::new();
+    }
+
     public function canAccessPanel(Panel $panel): bool
     {
         return $panel->getId() === 'vendor' && $this->isActive();

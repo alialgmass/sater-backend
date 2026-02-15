@@ -3,32 +3,61 @@
 namespace Modules\Product\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 use Modules\Product\Models\Product;
 use Modules\Category\Models\Category;
 use Modules\Vendor\Models\Vendor;
+use Modules\Product\Models\Color;
+use Modules\Product\Models\Size;
+use Modules\Product\Models\Tag;
 
 class ProductFactory extends Factory
 {
     protected $model = Product::class;
 
+    public function configure()
+    {
+        return $this->afterCreating(function (Product $product) {
+            // Attach random colors
+            $colors = Color::inRandomOrder()->take(rand(1, 3))->pluck('id');
+            if ($colors->isEmpty()) {
+                $colors = Color::factory()->count(3)->create()->pluck('id');
+            }
+            $product->colors()->attach($colors);
+
+            // Attach random sizes
+            $sizes = Size::inRandomOrder()->take(rand(1, 3))->pluck('id');
+            if ($sizes->isEmpty()) {
+                $sizes = Size::factory()->count(3)->create()->pluck('id');
+            }
+            $product->sizes()->attach($sizes);
+
+            // Attach random tags
+            $tags = Tag::inRandomOrder()->take(rand(1, 3))->pluck('id');
+            if ($tags->isEmpty()) {
+                $tags = Tag::factory()->count(3)->create()->pluck('id');
+            }
+            $product->tags()->attach($tags);
+        });
+    }
+
     public function definition(): array
     {
-        $price = $this->faker->randomFloat(2, 10, 200);
-
+        $name = $this->faker->words(3, true);
+        
+        $colors = ['Red', 'Blue', 'Green', 'Black', 'White', 'Yellow'];
+        $sizes = ['S', 'M', 'L', 'XL', 'XXL'];
+        
         return [
-            'vendor_id' => Vendor::factory(),
-            'category_id' => Category::factory(),
-            'name' => $this->faker->word() . ' ' . $this->faker->word(),
-            'slug' => $this->faker->unique()->slug(),
-            'description' => $this->faker->sentence(10),
-            'sku' => $this->faker->unique()->bothify('SKU-????-####'),
-            'price' => $price,
-            'discounted_price' => $this->faker->boolean(30) ? $price * 0.8 : null,
+            'vendor_id' => \Modules\Vendor\Models\Vendor::factory(),
+            'category_id' => \Modules\Category\Models\Category::factory(),
+            'name' => ucfirst($name),
+            'slug' => Str::slug($name),
+            'description' => $this->faker->paragraph(),
+            'sku' => strtoupper(Str::random(8)),
+            'price' => $this->faker->randomFloat(2, 10, 500),
+            'discounted_price' => $this->faker->optional(0.3)->randomFloat(2, 5, 400),
             'stock' => $this->faker->numberBetween(0, 100),
-            'keywords' => implode(',', $this->faker->words(5)),
-            'sales_count' => $this->faker->numberBetween(0, 1000),
-            'avg_rating' => $this->faker->randomFloat(2, 0, 5),
-            'rating_count' => $this->faker->numberBetween(0, 500),
             'attributes' => [
                 'size' => $this->faker->randomElement(['S', 'M', 'L', 'XL']),
                 'color' => $this->faker->colorName(),

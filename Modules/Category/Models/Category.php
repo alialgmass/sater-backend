@@ -11,6 +11,11 @@ class Category extends Model
 {
     use HasFactory;
 
+    protected static function newFactory()
+    {
+        return \Modules\Category\Database\Factories\CategoryFactory::new();
+    }
+
     /**
      * The attributes that are mass assignable.
      */

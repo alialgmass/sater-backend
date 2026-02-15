@@ -3,12 +3,20 @@
 use Illuminate\Support\Facades\Route;
 use Modules\Product\Http\Controllers\Api\ProductController;
 use Modules\Product\Http\Controllers\Api\SearchController;
+use Modules\Product\Http\Controllers\Api\ColorController;
+use Modules\Product\Http\Controllers\Api\SizeController;
+use Modules\Product\Http\Controllers\Api\TagController;
 
 Route::middleware([])->prefix('v1')->group(function () {
     // Products CRUD
     Route::apiResource('products', ProductController::class)
-    ->only('index')
-    ->names('product');
+        ->only('index')
+        ->names('product');
+
+    // Attributes
+    Route::apiResource('colors', ColorController::class)->only('index');
+    Route::apiResource('sizes', SizeController::class)->only('index');
+    Route::apiResource('tags', TagController::class)->only('index');
 
     // Search endpoints (public access)
     Route::prefix('search')->group(function () {

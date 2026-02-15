@@ -13,7 +13,12 @@ use Spatie\MediaLibrary\HasMedia;
 
 class Product extends Model implements HasMedia
 {
-    use SoftDeletes, InteractsWithMedia;
+    use SoftDeletes, InteractsWithMedia, HasFactory;
+
+    protected static function newFactory()
+    {
+        return \Modules\Product\Database\Factories\ProductFactory::new();
+    }
 
     protected $fillable = [
         'vendor_id',
@@ -50,5 +55,20 @@ class Product extends Model implements HasMedia
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function colors()
+    {
+        return $this->belongsToMany(Color::class, 'color_product');
+    }
+
+    public function sizes()
+    {
+        return $this->belongsToMany(Size::class, 'product_size');
+    }
+
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class, 'product_tag');
     }
 }
