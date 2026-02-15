@@ -9,6 +9,7 @@ use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreBulkAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Filters\Filter;
@@ -25,7 +26,8 @@ class ProductsTable
     {
         return $table
             ->columns([
-                ImageColumn::make('main_image')
+                SpatieMediaLibraryImageColumn::make('main_image')
+                ->collection('main_image')
                     ->label('Image')
                     ->circular()
                     ->defaultImageUrl(asset('vendor/filament/images/product-placeholder.png')),
