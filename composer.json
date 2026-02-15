@@ -3,7 +3,10 @@
     "name": "laravel/blank-vue-starter-kit",
     "type": "project",
     "description": "The skeleton application for the Laravel framework.",
-    "keywords": ["laravel", "framework"],
+    "keywords": [
+        "laravel",
+        "framework"
+    ],
     "license": "MIT",
     "require": {
         "php": "^8.2",
@@ -19,7 +22,8 @@
         "nwidart/laravel-modules": "*",
         "rakutentech/laravel-request-docs": "*",
         "spatie/laravel-medialibrary": "*",
-        "spatie/laravel-permission": "*"
+        "spatie/laravel-permission": "*",
+        "spatie/laravel-translatable": "^6.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

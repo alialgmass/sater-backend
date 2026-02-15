@@ -10,5 +10,6 @@
     "Cart": true,
     "Checkout": true,
     "Payment": true,
-    "Core": true
+    "Core": true,
+    "Banner": true
 }

@@ -25,8 +25,8 @@ trait HasTranslations
         return $this->translationLocale ?: config('app.locale') ?? app()->getFallbackLocale();
     }
 
-    protected function asJson($value)
+    protected function asJson($value, $flags = 0)
     {
-        return json_encode($value, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
+        return json_encode($value, $flags | JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
     }
 }
