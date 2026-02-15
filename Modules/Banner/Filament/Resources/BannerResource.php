@@ -113,7 +113,13 @@ class BannerResource extends Resource
                 TextColumn::make('title')
                     ->label('Title')
                     ->searchable()
-                    ->formatStateUsing(fn ($state) => $state[app()->getLocale()] ?? array_values($state)[0] ?? ''),
+                    ->formatStateUsing(function ($state) {
+                        if (! is_array($state)) {
+                            return $state;
+                        }
+
+                        return $state[app()->getLocale()] ?? array_values($state)[0] ?? '';
+                    }),
 
                 Tables\Columns\TextColumn::make('status')
                     ->badge(),
