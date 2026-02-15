@@ -33,7 +33,7 @@ class CartItemService
             return $this->addToCustomerCart($cart, $product, $data->quantity);
         } else {
             // Guest cart
-            return $this->addToGuestCart($data->cart_key, $product, $data->quantity);
+            return $this->addToGuestCart($cart, $product, $data->quantity);
         }
     }
 

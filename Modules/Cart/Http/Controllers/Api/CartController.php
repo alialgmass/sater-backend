@@ -30,15 +30,17 @@ class CartController extends Controller
     public function index(Request $request): JsonResponse
     {
         $user = $request->user('api_customers');
+        $cartKey = $request->header('X-Cart-Key') ?? $request->input('cart_key');
         
         if ($user) {
             // Authenticated customer
+            if ($cartKey) {
+                $this->cartService->mergeGuestCartToCustomer($cartKey, $user);
+            }
             $cart = $this->cartService->getOrCreateCart($user);
             $items = $cart->items()->with(['product', 'vendor'])->get();
         } else {
             // Guest user
-            $cartKey = $request->header('X-Cart-Key');
-            
             if (!$cartKey) {
                 return response()->json([
                     'items' => [],
@@ -65,6 +67,9 @@ class CartController extends Controller
         $user = $request->user('api_customers');
 
         if ($user) {
+            if ($data->cart_key) {
+                $this->cartService->mergeGuestCartToCustomer($data->cart_key, $user);
+            }
             $cart = $this->cartService->getOrCreateCart($user);
         } else {
             // Generate cart key for guest if not provided

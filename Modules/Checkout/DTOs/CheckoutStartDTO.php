@@ -14,8 +14,8 @@ readonly class CheckoutStartDTO
     public static function fromRequest($request): self
     {
         return new self(
-            email: $request->validated('email'),
-            phone: $request->validated('phone'),
+            email: $request->input('email'),
+            phone: $request->input('phone'),
             customer_id: $request->user('api_customers')?->id,
             cart_key: $request->header('X-Cart-Key') ?? $request->input('cart_key'),
         );

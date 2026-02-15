@@ -6,7 +6,7 @@ use Modules\Order\Http\Controllers\Api\VendorOrderController;
 
 // Customer order routes
 Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
-    Route::apiResource('orders', OrderController::class)->names('order');
+    Route::apiResource('orders', OrderController::class)->only(['index', 'show'])->names('order');
 });
 
 // Vendor-specific order routes
