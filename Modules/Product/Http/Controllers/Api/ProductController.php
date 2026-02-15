@@ -20,6 +20,9 @@ class ProductController extends ApiController
         $products = $this->service->list($request->only([
             'vendor_id',
             'category_id',
+            'color_id',
+            'size_id',
+            'tag_id',
             'status',
             'search',
             'per_page'
