@@ -25,6 +25,9 @@ class ProductController extends ApiController
             'tag_id',
             'status',
             'search',
+            'min_price',
+            'max_price',
+            'on_sale',
             'per_page'
         ]));
 
