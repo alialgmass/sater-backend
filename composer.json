@@ -23,7 +23,8 @@
         "rakutentech/laravel-request-docs": "*",
         "spatie/laravel-medialibrary": "*",
         "spatie/laravel-permission": "*",
-        "spatie/laravel-translatable": "^6.0"
+        "spatie/laravel-translatable": "^6.0",
+        "stancl/tenancy": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

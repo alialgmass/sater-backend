@@ -1,25 +1,59 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\AdminShippingController;
 
-// Admin shipping routes
-Route::middleware(['auth:sanctum', 'role:admin'])->prefix('admin/shipping')->name('admin.shipping.')->group(function () {
-    // Shipping zones management
-    Route::get('/zones', [AdminShippingController::class, 'indexZones'])->name('zones.index');
-    Route::post('/zones', [AdminShippingController::class, 'storeZone'])->name('zones.store');
-    Route::put('/zones/{id}', [AdminShippingController::class, 'updateZone'])->name('zones.update');
-    Route::delete('/zones/{id}', [AdminShippingController::class, 'destroyZone'])->name('zones.destroy');
+/*
+|--------------------------------------------------------------------------
+| API Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register API routes for your application. These
+| routes are loaded by the RouteServiceProvider and all of them will
+| be assigned to the "api" middleware group.
+|
+*/
+
+Route::prefix('v1')->group(function () {
+    // Public routes (no authentication required)
     
-    // Zone locations
-    Route::post('/zones/{zoneId}/locations', [AdminShippingController::class, 'addZoneLocation'])->name('zones.locations.store');
+    // Tenant Registration
+    Route::post('/tenants/register', [\App\Http\Controllers\TenantRegistrationController::class, 'register'])
+        ->name('api.tenants.register');
     
-    // Vendor shipping methods
-    Route::get('/vendor-methods', [AdminShippingController::class, 'indexVendorMethods'])->name('vendor-methods.index');
-    Route::post('/vendor-methods', [AdminShippingController::class, 'storeVendorMethod'])->name('vendor-methods.store');
-    Route::put('/vendor-methods/{id}', [AdminShippingController::class, 'updateVendorMethod'])->name('vendor-methods.update');
+    Route::get('/tenants/verify/{token}', [\App\Http\Controllers\TenantRegistrationController::class, 'verify'])
+        ->name('api.tenants.verify');
     
-    // Courier integrations
-    Route::get('/couriers', [AdminShippingController::class, 'courierIntegrationIndex'])->name('couriers.index');
-    Route::post('/couriers/{courierId}/configure', [AdminShippingController::class, 'configureCourier'])->name('couriers.configure');
+    Route::post('/tenants/resend-verification', [\App\Http\Controllers\TenantRegistrationController::class, 'resendVerification'])
+        ->name('api.tenants.resend-verification');
+    
+    // Subscription Plans (public for selection)
+    Route::get('/subscription-plans', [\App\Http\Controllers\TenantRegistrationController::class, 'listPlans'])
+        ->name('api.subscription-plans.index');
+    
+    // Tenant Subscription (after email verification)
+    Route::post('/tenants/{tenantId}/subscribe', [\App\Http\Controllers\TenantRegistrationController::class, 'subscribe'])
+        ->name('api.tenants.subscribe');
+    
+    // Domain Management (would be protected with auth:sanctum in production)
+    Route::prefix('/tenants/{tenantId}/domains')->group(function () {
+        Route::get('/', [\App\Http\Controllers\DomainManagementController::class, 'index'])
+            ->name('api.domains.index');
+        Route::post('/', [\App\Http\Controllers\DomainManagementController::class, 'store'])
+            ->name('api.domains.store');
+        Route::put('/{domainId}/verify', [\App\Http\Controllers\DomainManagementController::class, 'verify'])
+            ->name('api.domains.verify');
+        Route::put('/{domainId}/primary', [\App\Http\Controllers\DomainManagementController::class, 'setPrimary'])
+            ->name('api.domains.primary');
+        Route::delete('/{domainId}', [\App\Http\Controllers\DomainManagementController::class, 'destroy'])
+            ->name('api.domains.destroy');
+    });
+    
+    // Subdomain Change
+    Route::put('/tenants/{tenantId}/subdomain', [\App\Http\Controllers\DomainManagementController::class, 'changeSubdomain'])
+        ->name('api.tenants.subdomain.change');
+    
+    // Protected API routes would go here (with Sanctum middleware)
+    // Route::middleware(['auth:sanctum'])->group(function () {
+    //     // Authenticated routes
+    // });
 });
