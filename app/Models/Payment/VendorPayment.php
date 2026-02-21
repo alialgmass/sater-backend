@@ -28,7 +28,7 @@ class VendorPayment extends Model
     // Relationships
     public function vendorOrder(): BelongsTo
     {
-        return $this->belongsTo(\App\Models\Order\VendorOrder::class);
+        return $this->belongsTo(\Modules\Order\Models\VendorOrder::class);
     }
 
     public function lastPaymentAttempt(): BelongsTo

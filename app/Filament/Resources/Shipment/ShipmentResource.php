@@ -84,14 +84,14 @@ class ShipmentResource extends Resource
                     }),
             ])
             ->actions([
-                \Filament\Tables\Actions\Action::make('view')
+                \Filament\Actions\Action::make('view')
                     ->label('View Details')
                     ->url(fn (ShipmentModel $record): string => static::getUrl('view', ['record' => $record]))
                     ->icon('heroicon-m-eye'),
             ])
             ->bulkActions([
-                \Filament\Tables\Actions\BulkActionGroup::make([
-                    \Filament\Tables\Actions\Action::make('mark_shipped')
+                \Filament\Actions\BulkActionGroup::make([
+                    \Filament\Actions\Action::make('mark_shipped')
                         ->label('Mark as Shipped')
                         ->action(function (array $records) {
                             foreach ($records as $record) {
@@ -100,7 +100,7 @@ class ShipmentResource extends Resource
                         })
                         ->requiresConfirmation()
                         ->visible(fn () => auth()->user()->hasRole('vendor')),
-                    \Filament\Tables\Actions\Action::make('print_packing_slips')
+                    \Filament\Actions\Action::make('print_packing_slips')
                         ->label('Print Packing Slips')
                         ->action(function (array $records) {
                             // Print packing slips logic would go here

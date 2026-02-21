@@ -45,12 +45,12 @@ class Payment extends Model
     // Relationships
     public function vendorOrder(): BelongsTo
     {
-        return $this->belongsTo(\App\Models\Order\VendorOrder::class);
+        return $this->belongsTo(\Modules\Order\Models\VendorOrder::class);
     }
 
     public function masterOrder(): BelongsTo
     {
-        return $this->belongsTo(\App\Models\Order\MasterOrder::class);
+        return $this->belongsTo(\Modules\Order\Models\Order::class);
     }
 
     public function customer(): BelongsTo
@@ -60,7 +60,7 @@ class Payment extends Model
 
     public function vendor(): BelongsTo
     {
-        return $this->belongsTo(\App\Models\Vendor::class);
+        return $this->belongsTo(\Modules\Vendor\Models\Vendor::class);
     }
 
     public function attempts(): HasMany

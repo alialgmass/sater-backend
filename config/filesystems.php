@@ -60,6 +60,15 @@ return [
             'report' => false,
         ],
 
+        // Tenant storage disk - automatically scoped to current tenant
+        'tenant' => [
+            'driver' => 'local',
+            'root' => storage_path('app/tenants/' . tenant('id')),
+            'url' => env('APP_URL') . '/storage/tenants/' . tenant('id'),
+            'visibility' => 'private',
+            'throw' => false,
+        ],
+
     ],
 
     /*

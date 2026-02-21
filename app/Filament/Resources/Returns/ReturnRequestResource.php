@@ -164,10 +164,10 @@ class ReturnRequestResource extends Resource
                     }),
             ])
             ->actions([
-                \Filament\Tables\Actions\ViewAction::make(),
+                \Filament\Actions\ViewAction::make(),
             ])
             ->bulkActions([
-                \Filament\Tables\Actions\BulkActionGroup::make([
+                \Filament\Actions\BulkActionGroup::make([
                     // Add bulk actions if needed
                 ]),
             ])

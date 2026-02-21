@@ -41,16 +41,16 @@ class Shipment extends Model
 
     public function vendor()
     {
-        return $this->belongsTo(User::class, 'vendor_id');
+        return $this->belongsTo(\Modules\Vendor\Models\Vendor::class, 'vendor_id');
     }
 
     public function method()
     {
-        return $this->belongsTo(\Modules\Vendor\Models\VendorShippingMethod::class, 'shipping_method_id');
+        return $this->belongsTo(\App\Models\Shipping\VendorShippingMethod::class, 'shipping_method_id');
     }
 
     public function attempts()
     {
-        return $this->hasMany(\Modules\Shipping\Models\DeliveryAttempt::class);
+        return $this->hasMany(\App\Models\Shipping\DeliveryAttempt::class);
     }
 }

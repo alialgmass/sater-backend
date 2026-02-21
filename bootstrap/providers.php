@@ -6,4 +6,5 @@ return [
     App\Providers\Filament\AdminPanelProvider::class,
     App\Providers\Filament\VendorPanelProvider::class,
     Modules\Order\Providers\AuthServiceProvider::class,
+    App\Providers\TenancyServiceProvider::class,
 ];
