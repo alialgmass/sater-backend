@@ -12,6 +12,7 @@ class AuthModuleServiceProvider extends ServiceProvider
     {
         $this->registerRoutes();
         $this->registerMigrations();
+
         $this->loadFactoriesFrom(__DIR__ . '/../database/factories');
     }
 
@@ -36,5 +37,9 @@ class AuthModuleServiceProvider extends ServiceProvider
         // Migrations are currently in database/migrations
         // If we move them back to Modules/Auth/Database/Migrations:
         // $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+    }
+    protected function re()
+    {
+
     }
 }

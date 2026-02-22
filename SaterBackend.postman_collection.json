@@ -1,8 +1,8 @@
 {
   "info": {
     "name": "Sater Backend API Collection",
-    "description": "Complete API collection for Sater Backend modular Laravel application",
-    "version": "1.0.0",
+    "description": "Updated complete API collection for Sater Backend including single-step checkout and all module endpoints.",
+    "version": "1.1.0",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collections.json"
   },
   "item": [
@@ -10,7 +10,7 @@
       "name": "Authentication",
       "item": [
         {
-          "name": "Customer Registration",
+          "name": "Register",
           "request": {
             "method": "POST",
             "header": [
@@ -25,20 +25,49 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\",\n  \"password_confirmation\": \"password123\"\n}"
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\",\n  \"password_confirmation\": \"password123\",\n  \"phone\": \"+123456789\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/register",
               "protocol": "http",
-              "host": ["{{hostname}}"],
+              "host": [
+                "{{hostname}}"
+              ],
               "port": "{{port}}",
-              "path": ["api", "register"]
+              "path": [
+                "api",
+                "register"
+              ]
             }
           },
-          "response": []
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\",\n  \"password_confirmation\": \"password123\",\n  \"phone\": \"+123456789\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/register"
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"message\": \"Registration successful.\",\n  \"data\": {\n    \"token\": \"1|xyz...\",\n    \"user\": {\n      \"id\": 1,\n      \"name\": \"John Doe\",\n      \"email\": \"john@example.com\"\n    }\n  }\n}"
+            }
+          ]
         },
         {
-          "name": "Customer Login",
+          "name": "Login",
           "request": {
             "method": "POST",
             "header": [
@@ -58,54 +87,40 @@
             "url": {
               "raw": "{{baseUrl}}/api/login",
               "protocol": "http",
-              "host": ["{{hostname}}"],
+              "host": [
+                "{{hostname}}"
+              ],
               "port": "{{port}}",
-              "path": ["api", "login"]
+              "path": [
+                "api",
+                "login"
+              ]
             }
           },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "Customer Management",
-      "item": [
-        {
-          "name": "Get Profile",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{customer_token}}"
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "POST",
+                "url": {
+                  "raw": "{{baseUrl}}/api/login"
+                }
               },
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/api/profile",
-              "protocol": "http",
-              "host": ["{{hostname}}"],
-              "port": "{{port}}",
-              "path": ["api", "profile"]
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"message\": \"Login successful.\",\n  \"data\": {\n    \"token\": \"2|abc...\",\n    \"user\": { \"id\": 1, \"name\": \"John Doe\" }\n  }\n}"
             }
-          },
-          "response": []
+          ]
         },
         {
-          "name": "Update Profile",
+          "name": "Verify OTP",
           "request": {
-            "method": "PUT",
+            "method": "POST",
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer {{customer_token}}"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
+                "value": "Bearer {{token}}"
               },
               {
                 "key": "Accept",
@@ -114,26 +129,65 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"John Updated\",\n  \"email\": \"john.updated@example.com\",\n  \"phone\": \"+1234567890\"\n}"
+              "raw": "{\n  \"otp\": \"123456\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/api/profile",
+              "raw": "{{baseUrl}}/api/verify-otp",
               "protocol": "http",
-              "host": ["{{hostname}}"],
+              "host": [
+                "{{hostname}}"
+              ],
               "port": "{{port}}",
-              "path": ["api", "profile"]
+              "path": [
+                "api",
+                "verify-otp"
+              ]
             }
           },
           "response": []
-        },
+        }
+      ]
+    },
+    {
+      "name": "Customer Profile",
+      "item": [
         {
-          "name": "Get Addresses",
+          "name": "Get Profile",
           "request": {
             "method": "GET",
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer {{customer_token}}"
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/profile",
+              "protocol": "http",
+              "host": [
+                "{{hostname}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "api",
+                "profile"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Addresses Index",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
               },
               {
                 "key": "Accept",
@@ -143,9 +197,14 @@
             "url": {
               "raw": "{{baseUrl}}/api/addresses",
               "protocol": "http",
-              "host": ["{{hostname}}"],
+              "host": [
+                "{{hostname}}"
+              ],
               "port": "{{port}}",
-              "path": ["api", "addresses"]
+              "path": [
+                "api",
+                "addresses"
+              ]
             }
           },
           "response": []
@@ -157,7 +216,7 @@
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer {{customer_token}}"
+                "value": "Bearer {{token}}"
               },
               {
                 "key": "Content-Type",
@@ -170,70 +229,19 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"label\": \"Home\",\n  \"first_name\": \"John\",\n  \"last_name\": \"Doe\",\n  \"street_address\": \"123 Main St\",\n  \"city\": \"New York\",\n  \"state\": \"NY\",\n  \"country\": \"US\",\n  \"zip_code\": \"10001\",\n  \"phone\": \"+1234567890\",\n  \"is_default\": true\n}"
+              "raw": "{\n  \"country\": \"SA\",\n  \"city\": \"Riyadh\",\n  \"street\": \"King Fahd Rd\",\n  \"is_default\": true\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/addresses",
               "protocol": "http",
-              "host": ["{{hostname}}"],
+              "host": [
+                "{{hostname}}"
+              ],
               "port": "{{port}}",
-              "path": ["api", "addresses"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Update Address",
-          "request": {
-            "method": "PUT",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{customer_token}}"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"label\": \"Work\",\n  \"first_name\": \"John\",\n  \"last_name\": \"Doe\",\n  \"street_address\": \"456 Business Ave\",\n  \"city\": \"New York\",\n  \"state\": \"NY\",\n  \"country\": \"US\",\n  \"zip_code\": \"10002\",\n  \"phone\": \"+1234567890\",\n  \"is_default\": false\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/addresses/{{address_id}}",
-              "protocol": "http",
-              "host": ["{{hostname}}"],
-              "port": "{{port}}",
-              "path": ["api", "addresses", "{{address_id}}"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Delete Address",
-          "request": {
-            "method": "DELETE",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{customer_token}}"
-              },
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/api/addresses/{{address_id}}",
-              "protocol": "http",
-              "host": ["{{hostname}}"],
-              "port": "{{port}}",
-              "path": ["api", "addresses", "{{address_id}}"]
+              "path": [
+                "api",
+                "addresses"
+              ]
             }
           },
           "response": []
@@ -241,10 +249,10 @@
       ]
     },
     {
-      "name": "Products & Categories",
+      "name": "Products & Search",
       "item": [
         {
-          "name": "Get All Products",
+          "name": "All Products",
           "request": {
             "method": "GET",
             "header": [
@@ -256,9 +264,15 @@
             "url": {
               "raw": "{{baseUrl}}/api/v1/products",
               "protocol": "http",
-              "host": ["{{hostname}}"],
+              "host": [
+                "{{hostname}}"
+              ],
               "port": "{{port}}",
-              "path": ["api", "v1", "products"]
+              "path": [
+                "api",
+                "v1",
+                "products"
+              ]
             }
           },
           "response": []
@@ -274,61 +288,22 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/api/v1/search/products?q=laptop&page=1",
+              "raw": "{{baseUrl}}/api/v1/search/products?q=shirt",
               "protocol": "http",
-              "host": ["{{hostname}}"],
+              "host": [
+                "{{hostname}}"
+              ],
               "port": "{{port}}",
-              "path": ["api", "v1", "search", "products"],
-              "query": [
-                {
-                  "key": "q",
-                  "value": "laptop"
-                },
-                {
-                  "key": "page",
-                  "value": "1"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Product Search with Filters",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/search/products?q=shirt&category=1&price_min=10&price_max=100&sort=price_asc",
-              "protocol": "http",
-              "host": ["{{hostname}}"],
-              "port": "{{port}}",
-              "path": ["api", "v1", "search", "products"],
+              "path": [
+                "api",
+                "v1",
+                "search",
+                "products"
+              ],
               "query": [
                 {
                   "key": "q",
                   "value": "shirt"
-                },
-                {
-                  "key": "category",
-                  "value": "1"
-                },
-                {
-                  "key": "price_min",
-                  "value": "10"
-                },
-                {
-                  "key": "price_max",
-                  "value": "100"
-                },
-                {
-                  "key": "sort",
-                  "value": "price_asc"
                 }
               ]
             }
@@ -336,81 +311,7 @@
           "response": []
         },
         {
-          "name": "Get Product Autocomplete Suggestions",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/search/autocomplete?term=lap",
-              "protocol": "http",
-              "host": ["{{hostname}}"],
-              "port": "{{port}}",
-              "path": ["api", "v1", "search", "autocomplete"],
-              "query": [
-                {
-                  "key": "term",
-                  "value": "lap"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get Search History",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{customer_token}}"
-              },
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/search/history",
-              "protocol": "http",
-              "host": ["{{hostname}}"],
-              "port": "{{port}}",
-              "path": ["api", "v1", "search", "history"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Clear Search History",
-          "request": {
-            "method": "DELETE",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{customer_token}}"
-              },
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/search/history",
-              "protocol": "http",
-              "host": ["{{hostname}}"],
-              "port": "{{port}}",
-              "path": ["api", "v1", "search", "history"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get All Categories",
+          "name": "Categories Index",
           "request": {
             "method": "GET",
             "header": [
@@ -422,9 +323,15 @@
             "url": {
               "raw": "{{baseUrl}}/api/v1/categories",
               "protocol": "http",
-              "host": ["{{hostname}}"],
+              "host": [
+                "{{hostname}}"
+              ],
               "port": "{{port}}",
-              "path": ["api", "v1", "categories"]
+              "path": [
+                "api",
+                "v1",
+                "categories"
+              ]
             }
           },
           "response": []
@@ -435,7 +342,7 @@
       "name": "Cart & Wishlist",
       "item": [
         {
-          "name": "Get Cart Items",
+          "name": "Get Cart",
           "request": {
             "method": "GET",
             "header": [
@@ -447,15 +354,20 @@
             "url": {
               "raw": "{{baseUrl}}/api/cart",
               "protocol": "http",
-              "host": ["{{hostname}}"],
+              "host": [
+                "{{hostname}}"
+              ],
               "port": "{{port}}",
-              "path": ["api", "cart"]
+              "path": [
+                "api",
+                "cart"
+              ]
             }
           },
           "response": []
         },
         {
-          "name": "Add Item to Cart",
+          "name": "Add to Cart",
           "request": {
             "method": "POST",
             "header": [
@@ -470,94 +382,20 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"product_id\": 1,\n  \"quantity\": 2,\n  \"variant_id\": null\n}"
+              "raw": "{\n  \"product_id\": 1,\n  \"quantity\": 2\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/cart/add",
               "protocol": "http",
-              "host": ["{{hostname}}"],
+              "host": [
+                "{{hostname}}"
+              ],
               "port": "{{port}}",
-              "path": ["api", "cart", "add"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Update Cart Item",
-          "request": {
-            "method": "PUT",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{customer_token}}"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"quantity\": 3\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/cart/items/{{cart_item_id}}",
-              "protocol": "http",
-              "host": ["{{hostname}}"],
-              "port": "{{port}}",
-              "path": ["api", "cart", "items", "{{cart_item_id}}"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Remove Cart Item",
-          "request": {
-            "method": "DELETE",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{customer_token}}"
-              },
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/api/cart/items/{{cart_item_id}}",
-              "protocol": "http",
-              "host": ["{{hostname}}"],
-              "port": "{{port}}",
-              "path": ["api", "cart", "items", "{{cart_item_id}}"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Save Cart Item for Later",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{customer_token}}"
-              },
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/api/cart/items/{{cart_item_id}}/save-for-later",
-              "protocol": "http",
-              "host": ["{{hostname}}"],
-              "port": "{{port}}",
-              "path": ["api", "cart", "items", "{{cart_item_id}}", "save-for-later"]
+              "path": [
+                "api",
+                "cart",
+                "add"
+              ]
             }
           },
           "response": []
@@ -569,7 +407,7 @@
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer {{customer_token}}"
+                "value": "Bearer {{token}}"
               },
               {
                 "key": "Accept",
@@ -579,133 +417,14 @@
             "url": {
               "raw": "{{baseUrl}}/api/wishlist",
               "protocol": "http",
-              "host": ["{{hostname}}"],
+              "host": [
+                "{{hostname}}"
+              ],
               "port": "{{port}}",
-              "path": ["api", "wishlist"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Add to Wishlist",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{customer_token}}"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"product_id\": 1\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/wishlist",
-              "protocol": "http",
-              "host": ["{{hostname}}"],
-              "port": "{{port}}",
-              "path": ["api", "wishlist"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Remove from Wishlist",
-          "request": {
-            "method": "DELETE",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{customer_token}}"
-              },
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/api/wishlist/{{product_id}}",
-              "protocol": "http",
-              "host": ["{{hostname}}"],
-              "port": "{{port}}",
-              "path": ["api", "wishlist", "{{product_id}}"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Move Wishlist Item to Cart",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{customer_token}}"
-              },
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/api/wishlist/{{product_id}}/move-to-cart",
-              "protocol": "http",
-              "host": ["{{hostname}}"],
-              "port": "{{port}}",
-              "path": ["api", "wishlist", "{{product_id}}", "move-to-cart"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Share Wishlist",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{customer_token}}"
-              },
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/api/wishlist/share",
-              "protocol": "http",
-              "host": ["{{hostname}}"],
-              "port": "{{port}}",
-              "path": ["api", "wishlist", "share"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "View Shared Wishlist",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/api/wishlist/shared/{{share_token}}",
-              "protocol": "http",
-              "host": ["{{hostname}}"],
-              "port": "{{port}}",
-              "path": ["api", "wishlist", "shared", "{{share_token}}"]
+              "path": [
+                "api",
+                "wishlist"
+              ]
             }
           },
           "response": []
@@ -713,16 +432,16 @@
       ]
     },
     {
-      "name": "Checkout & Payment",
+      "name": "Checkout",
       "item": [
         {
-          "name": "Start Checkout",
+          "name": "Process Checkout (Single Step)",
           "request": {
             "method": "POST",
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer {{customer_token}}"
+                "value": "Bearer {{token}}"
               },
               {
                 "key": "Content-Type",
@@ -735,283 +454,50 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"cart_id\": 1,\n  \"customer_id\": 1\n}"
+              "raw": "{\n  \"address\": {\n    \"country\": \"SA\",\n    \"city\": \"Riyadh\",\n    \"street\": \"King Fahd Rd\"\n  },\n  \"shipping_method\": \"standard\",\n  \"payment_method\": \"cod\",\n  \"coupon_code\": \"SAVE10\",\n  \"cart_key\": null\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/api/checkout/start",
+              "raw": "{{baseUrl}}/api/checkout",
               "protocol": "http",
-              "host": ["{{hostname}}"],
+              "host": [
+                "{{hostname}}"
+              ],
               "port": "{{port}}",
-              "path": ["api", "checkout", "start"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Select Shipping Address",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{customer_token}}"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"address_id\": 1,\n  \"checkout_session_id\": \"session_abc123\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/checkout/address",
-              "protocol": "http",
-              "host": ["{{hostname}}"],
-              "port": "{{port}}",
-              "path": ["api", "checkout", "address"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Select Shipping Method",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{customer_token}}"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"shipping_method_id\": 1,\n  \"checkout_session_id\": \"session_abc123\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/checkout/shipping",
-              "protocol": "http",
-              "host": ["{{hostname}}"],
-              "port": "{{port}}",
-              "path": ["api", "checkout", "shipping"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Select Payment Method",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{customer_token}}"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"payment_method\": \"credit_card\",\n  \"gateway\": \"stripe\",\n  \"checkout_session_id\": \"session_abc123\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/checkout/payment",
-              "protocol": "http",
-              "host": ["{{hostname}}"],
-              "port": "{{port}}",
-              "path": ["api", "checkout", "payment"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Apply Coupon",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{customer_token}}"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"coupon_code\": \"SAVE10\",\n  \"checkout_session_id\": \"session_abc123\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/checkout/coupon",
-              "protocol": "http",
-              "host": ["{{hostname}}"],
-              "port": "{{port}}",
-              "path": ["api", "checkout", "coupon"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get Checkout Summary",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{customer_token}}"
-              },
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/api/checkout/summary?session_id=session_abc123",
-              "protocol": "http",
-              "host": ["{{hostname}}"],
-              "port": "{{port}}",
-              "path": ["api", "checkout", "summary"],
-              "query": [
-                {
-                  "key": "session_id",
-                  "value": "session_abc123"
-                }
+              "path": [
+                "api",
+                "checkout"
               ]
             }
           },
-          "response": []
-        },
-        {
-          "name": "Confirm Checkout",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{customer_token}}"
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"address\": {\n    \"country\": \"SA\",\n    \"city\": \"Riyadh\",\n    \"street\": \"King Fahd Rd\"\n  },\n  \"shipping_method\": \"standard\",\n  \"payment_method\": \"cod\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/checkout"
+                }
               },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"checkout_session_id\": \"session_abc123\",\n  \"terms_accepted\": true\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/checkout/confirm",
-              "protocol": "http",
-              "host": ["{{hostname}}"],
-              "port": "{{port}}",
-              "path": ["api", "checkout", "confirm"]
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"message\": \"Order placed successfully.\",\n  \"data\": {\n    \"order_number\": \"ORD-ABC123XYZ\",\n    \"total\": 150.00,\n    \"summary\": {\n      \"subtotal\": 140.00,\n      \"tax\": 10.00,\n      \"shipping\": 15.00,\n      \"discount\": 15.00,\n      \"total\": 150.00\n    }\n  }\n}"
             }
-          },
-          "response": []
-        },
-        {
-          "name": "Initiate Payment",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"customer_id\": 1,\n  \"vendor_order_id\": 1,\n  \"amount\": 99.99,\n  \"currency\": \"USD\",\n  \"method\": \"credit_card\",\n  \"gateway\": \"stripe\",\n  \"customer_email\": \"john@example.com\",\n  \"customer_name\": \"John Doe\",\n  \"description\": \"Order payment\",\n  \"return_url\": \"https://example.com/success\",\n  \"cancel_url\": \"https://example.com/cancel\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/payments/initiate",
-              "protocol": "http",
-              "host": ["{{hostname}}"],
-              "port": "{{port}}",
-              "path": ["api", "payments", "initiate"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Verify Payment",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"transaction_id\": \"txn_abc123\",\n  \"reference_id\": \"ref_abc123\",\n  \"gateway\": \"stripe\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/payments/verify",
-              "protocol": "http",
-              "host": ["{{hostname}}"],
-              "port": "{{port}}",
-              "path": ["api", "payments", "verify"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get Payment Status by Order Number",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/api/payments/orders/{{order_number}}/status",
-              "protocol": "http",
-              "host": ["{{hostname}}"],
-              "port": "{{port}}",
-              "path": ["api", "payments", "orders", "{{order_number}}", "status"]
-            }
-          },
-          "response": []
+          ]
         }
       ]
     },
@@ -1019,13 +505,13 @@
       "name": "Orders",
       "item": [
         {
-          "name": "Get Customer Orders",
+          "name": "Customer Orders",
           "request": {
             "method": "GET",
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer {{customer_token}}"
+                "value": "Bearer {{token}}"
               },
               {
                 "key": "Accept",
@@ -1035,142 +521,21 @@
             "url": {
               "raw": "{{baseUrl}}/api/v1/orders",
               "protocol": "http",
-              "host": ["{{hostname}}"],
+              "host": [
+                "{{hostname}}"
+              ],
               "port": "{{port}}",
-              "path": ["api", "v1", "orders"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get Order Details",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{customer_token}}"
-              },
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/orders/{{order_id}}",
-              "protocol": "http",
-              "host": ["{{hostname}}"],
-              "port": "{{port}}",
-              "path": ["api", "v1", "orders", "{{order_id}}"]
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "Vendors",
-      "item": [
-        {
-          "name": "Get All Vendors",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/vendors",
-              "protocol": "http",
-              "host": ["{{hostname}}"],
-              "port": "{{port}}",
-              "path": ["api", "v1", "vendors"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Vendor Registration",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"Tech Store\",\n  \"email\": \"contact@techstore.com\",\n  \"password\": \"password123\",\n  \"password_confirmation\": \"password123\",\n  \"shop_name\": \"Tech Store\",\n  \"shop_slug\": \"tech-store\",\n  \"description\": \"Electronics and gadgets\",\n  \"phone\": \"+1234567890\",\n  \"address\": {\n    \"street\": \"123 Tech Street\",\n    \"city\": \"Tech City\",\n    \"state\": \"TS\",\n    \"country\": \"US\",\n    \"zip_code\": \"12345\"\n  },\n  \"business_license\": \"LICENSE123\",\n  \"tax_id\": \"TAX123\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/vendors/register",
-              "protocol": "http",
-              "host": ["{{hostname}}"],
-              "port": "{{port}}",
-              "path": ["api", "vendors", "register"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Check Slug Availability",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/api/vendors/check-slug/{{slug}}",
-              "protocol": "http",
-              "host": ["{{hostname}}"],
-              "port": "{{port}}",
-              "path": ["api", "vendors", "check-slug", "{{slug}}"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Search Vendor Products",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/vendors/{{vendor_id}}/search?q=laptop&page=1",
-              "protocol": "http",
-              "host": ["{{hostname}}"],
-              "port": "{{port}}",
-              "path": ["api", "v1", "vendors", "{{vendor_id}}", "search"],
-              "query": [
-                {
-                  "key": "q",
-                  "value": "laptop"
-                },
-                {
-                  "key": "page",
-                  "value": "1"
-                }
+              "path": [
+                "api",
+                "v1",
+                "orders"
               ]
             }
           },
           "response": []
         },
         {
-          "name": "Get Vendor Orders",
+          "name": "Vendor Orders",
           "request": {
             "method": "GET",
             "header": [
@@ -1186,209 +551,15 @@
             "url": {
               "raw": "{{baseUrl}}/api/vendor/orders",
               "protocol": "http",
-              "host": ["{{hostname}}"],
+              "host": [
+                "{{hostname}}"
+              ],
               "port": "{{port}}",
-              "path": ["api", "vendor", "orders"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get Vendor Order Details",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{vendor_token}}"
-              },
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/api/vendor/orders/{{vendor_order_number}}",
-              "protocol": "http",
-              "host": ["{{hostname}}"],
-              "port": "{{port}}",
-              "path": ["api", "vendor", "orders", "{{vendor_order_number}}"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Update Vendor Order Status",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{vendor_token}}"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"status\": \"shipped\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/vendor/orders/{{vendor_order_number}}/status",
-              "protocol": "http",
-              "host": ["{{hostname}}"],
-              "port": "{{port}}",
-              "path": ["api", "vendor", "orders", "{{vendor_order_number}}", "status"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Add Shipping Info to Vendor Order",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{vendor_token}}"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"tracking_number\": \"TRK123456789\",\n  \"carrier\": \"FedEx\",\n  \"estimated_delivery\": \"2023-12-25\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/vendor/orders/{{vendor_order_number}}/shipping",
-              "protocol": "http",
-              "host": ["{{hostname}}"],
-              "port": "{{port}}",
-              "path": ["api", "vendor", "orders", "{{vendor_order_number}}", "shipping"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get Vendor Shipping Methods",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{vendor_token}}"
-              },
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/api/vendor/shipping",
-              "protocol": "http",
-              "host": ["{{hostname}}"],
-              "port": "{{port}}",
-              "path": ["api", "vendor", "shipping"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get Vendor Shipping Method Details",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{vendor_token}}"
-              },
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/api/vendor/shipping/{{shipping_method_id}}",
-              "protocol": "http",
-              "host": ["{{hostname}}"],
-              "port": "{{port}}",
-              "path": ["api", "vendor", "shipping", "{{shipping_method_id}}"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Update Vendor Shipping Method Status",
-          "request": {
-            "method": "PUT",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{vendor_token}}"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"active\": true\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/vendor/shipping/{{shipping_method_id}}/status",
-              "protocol": "http",
-              "host": ["{{hostname}}"],
-              "port": "{{port}}",
-              "path": ["api", "vendor", "shipping", "{{shipping_method_id}}", "status"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Add Tracking Information",
-          "request": {
-            "method": "PUT",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{vendor_token}}"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"tracking_number\": \"TRK987654321\",\n  \"status\": \"in_transit\",\n  \"location\": \"Distribution Center\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/vendor/shipping/{{shipping_method_id}}/tracking",
-              "protocol": "http",
-              "host": ["{{hostname}}"],
-              "port": "{{port}}",
-              "path": ["api", "vendor", "shipping", "{{shipping_method_id}}", "tracking"]
+              "path": [
+                "api",
+                "vendor",
+                "orders"
+              ]
             }
           },
           "response": []
@@ -1396,42 +567,14 @@
       ]
     },
     {
-      "name": "Admin",
+      "name": "Vendors",
       "item": [
         {
-          "name": "Get Shipping Zones",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{admin_token}}"
-              },
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/api/admin/shipping/zones",
-              "protocol": "http",
-              "host": ["{{hostname}}"],
-              "port": "{{port}}",
-              "path": ["api", "admin", "shipping", "zones"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Create Shipping Zone",
+          "name": "Vendor Register",
           "request": {
             "method": "POST",
             "header": [
               {
-                "key": "Authorization",
-                "value": "Bearer {{admin_token}}"
-              },
-              {
                 "key": "Content-Type",
                 "value": "application/json"
               },
@@ -1442,267 +585,47 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"North America\",\n  \"description\": \"Shipping zone for North America\",\n  \"countries\": [\"US\", \"CA\", \"MX\"]\n}"
+              "raw": "{\n  \"name\": \"Tech Store\",\n  \"email\": \"vendor@tech.com\",\n  \"password\": \"password123\",\n  \"shop_name\": \"TechMart\",\n  \"slug\": \"techmart\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/api/admin/shipping/zones",
+              "raw": "{{baseUrl}}/api/vendors/register",
               "protocol": "http",
-              "host": ["{{hostname}}"],
+              "host": [
+                "{{hostname}}"
+              ],
               "port": "{{port}}",
-              "path": ["api", "admin", "shipping", "zones"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Update Shipping Zone",
-          "request": {
-            "method": "PUT",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{admin_token}}"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"North America Updated\",\n  \"description\": \"Updated shipping zone for North America\",\n  \"countries\": [\"US\", \"CA\", \"MX\", \"GB\"]\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/admin/shipping/zones/{{zone_id}}",
-              "protocol": "http",
-              "host": ["{{hostname}}"],
-              "port": "{{port}}",
-              "path": ["api", "admin", "shipping", "zones", "{{zone_id}}"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Delete Shipping Zone",
-          "request": {
-            "method": "DELETE",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{admin_token}}"
-              },
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/api/admin/shipping/zones/{{zone_id}}",
-              "protocol": "http",
-              "host": ["{{hostname}}"],
-              "port": "{{port}}",
-              "path": ["api", "admin", "shipping", "zones", "{{zone_id}}"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Add Location to Shipping Zone",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{admin_token}}"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"city\": \"New York\",\n  \"state\": \"NY\",\n  \"country\": \"US\",\n  \"zip_codes\": [\"10001\", \"10002\"]\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/admin/shipping/zones/{{zone_id}}/locations",
-              "protocol": "http",
-              "host": ["{{hostname}}"],
-              "port": "{{port}}",
-              "path": ["api", "admin", "shipping", "zones", "{{zone_id}}", "locations"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get Vendor Shipping Methods",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{admin_token}}"
-              },
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/api/admin/shipping/vendor-methods",
-              "protocol": "http",
-              "host": ["{{hostname}}"],
-              "port": "{{port}}",
-              "path": ["api", "admin", "shipping", "vendor-methods"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Create Vendor Shipping Method",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{admin_token}}"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"Standard Shipping\",\n  \"description\": \"Standard shipping method\",\n  \"enabled\": true,\n  \"requires_tracking\": true\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/admin/shipping/vendor-methods",
-              "protocol": "http",
-              "host": ["{{hostname}}"],
-              "port": "{{port}}",
-              "path": ["api", "admin", "shipping", "vendor-methods"]
+              "path": [
+                "api",
+                "vendors",
+                "register"
+              ]
             }
           },
           "response": []
         }
       ]
-    }
-  ],
-  "event": [
-    {
-      "listen": "prerequest",
-      "script": {
-        "type": "text/javascript",
-        "exec": [
-          ""
-        ]
-      }
-    },
-    {
-      "listen": "test",
-      "script": {
-        "type": "text/javascript",
-        "exec": [
-          ""
-        ]
-      }
     }
   ],
   "variable": [
     {
       "key": "baseUrl",
-      "value": "http://localhost:8000"
+      "value": "http://sater.test"
     },
     {
       "key": "hostname",
-      "value": "localhost"
+      "value": "sater.test"
     },
     {
       "key": "port",
-      "value": "8000"
+      "value": "80"
     },
     {
-      "key": "customer_token",
-      "value": "",
-      "description": "Customer authentication token"
+      "key": "token",
+      "value": ""
     },
     {
       "key": "vendor_token",
-      "value": "",
-      "description": "Vendor authentication token"
-    },
-    {
-      "key": "admin_token",
-      "value": "",
-      "description": "Admin authentication token"
-    },
-    {
-      "key": "address_id",
-      "value": "1",
-      "description": "Address ID for testing"
-    },
-    {
-      "key": "cart_item_id",
-      "value": "1",
-      "description": "Cart item ID for testing"
-    },
-    {
-      "key": "product_id",
-      "value": "1",
-      "description": "Product ID for testing"
-    },
-    {
-      "key": "order_id",
-      "value": "1",
-      "description": "Order ID for testing"
-    },
-    {
-      "key": "vendor_order_number",
-      "value": "ORD-001",
-      "description": "Vendor order number for testing"
-    },
-    {
-      "key": "shipping_method_id",
-      "value": "1",
-      "description": "Shipping method ID for testing"
-    },
-    {
-      "key": "zone_id",
-      "value": "1",
-      "description": "Shipping zone ID for testing"
-    },
-    {
-      "key": "vendor_id",
-      "value": "1",
-      "description": "Vendor ID for testing"
-    },
-    {
-      "key": "slug",
-      "value": "test-vendor",
-      "description": "Vendor slug for testing"
-    },
-    {
-      "key": "order_number",
-      "value": "ORD-001",
-      "description": "Order number for testing"
-    },
-    {
-      "key": "share_token",
-      "value": "abc123def456",
-      "description": "Wishlist share token for testing"
+      "value": ""
     }
   ]
 }
