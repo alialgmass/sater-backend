@@ -2,11 +2,11 @@
 
 namespace Modules\Cart\Services;
 
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use Modules\Auth\Models\Customer;
 use Modules\Cart\Models\Cart;
 use Modules\Cart\Models\GuestCart;
-use Illuminate\Support\Collection;
+use Modules\Customer\Models\Customer;
 
 class CartService
 {
@@ -24,7 +24,7 @@ class CartService
     {
         DB::transaction(function () use ($cartKey, $customer) {
             $guestItems = GuestCart::byCartKey($cartKey)->get();
-            
+
             if ($guestItems->isEmpty()) {
                 return;
             }

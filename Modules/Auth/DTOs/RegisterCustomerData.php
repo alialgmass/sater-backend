@@ -6,7 +6,7 @@ readonly class RegisterCustomerData
 {
     public function __construct(
         public string $name,
-        public string $email,
+      //  public string $email,
         public string $password,
         public ?string $phone = null,
     ) {}
@@ -15,7 +15,7 @@ readonly class RegisterCustomerData
     {
         return new self(
             name: $request->validated('name'),
-            email: $request->validated('email'),
+          //  email: $request->validated('email'),
             password: $request->validated('password'),
             phone: $request->validated('phone'),
         );

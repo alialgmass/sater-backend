@@ -2,10 +2,10 @@
 
 namespace Modules\Auth\Tests\Feature;
 
-use Tests\TestCase;
-use Modules\Auth\Models\Customer;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
+use Modules\Customer\Models\Customer;
+use Tests\TestCase;
 
 class AuthFlowTest extends TestCase
 {

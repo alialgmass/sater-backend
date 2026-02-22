@@ -1,10 +1,10 @@
 <?php
 
-namespace Modules\Auth\Models;
+namespace Modules\Customer\Models;
 
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Propaganistas\LaravelPhone\Casts\RawPhoneNumberCast;
@@ -43,4 +43,5 @@ class Customer extends Authenticatable
     {
         return $this->hasMany(\Modules\Order\Models\Order::class);
     }
+
 }

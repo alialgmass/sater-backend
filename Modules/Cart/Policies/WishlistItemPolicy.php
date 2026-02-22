@@ -2,8 +2,8 @@
 
 namespace Modules\Cart\Policies;
 
-use Modules\Auth\Models\Customer;
 use Modules\Cart\Models\WishlistItem;
+use Modules\Customer\Models\Customer;
 
 class WishlistItemPolicy
 {

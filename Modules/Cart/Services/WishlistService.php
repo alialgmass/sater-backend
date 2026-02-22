@@ -3,11 +3,11 @@
 namespace Modules\Cart\Services;
 
 use Illuminate\Support\Facades\DB;
-use Modules\Auth\Models\Customer;
+use Illuminate\Validation\ValidationException;
 use Modules\Cart\Models\Wishlist;
 use Modules\Cart\Models\WishlistItem;
+use Modules\Customer\Models\Customer;
 use Modules\Product\Models\Product;
-use Illuminate\Validation\ValidationException;
 
 class WishlistService
 {
@@ -20,7 +20,7 @@ class WishlistService
     {
         // Check if already exists
         $existing = $wishlist->items()->where('product_id', $product->id)->first();
-        
+
         if ($existing) {
             throw ValidationException::withMessages([
                 'product_id' => 'Product already in wishlist.'

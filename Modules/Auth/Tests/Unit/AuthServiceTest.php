@@ -2,17 +2,16 @@
 
 namespace Modules\Auth\Tests\Unit;
 
-use Tests\TestCase;
-use Modules\Auth\Services\AuthService;
-use Modules\Auth\Services\TokenService;
-use Modules\Auth\Repositories\CustomerRepositoryInterface;
-use Modules\Auth\DTOs\RegisterCustomerData;
-use Modules\Auth\DTOs\LoginData;
-use Modules\Auth\Models\Customer;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Mockery;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Modules\Auth\DTOs\LoginData;
+use Modules\Auth\DTOs\RegisterCustomerData;
+use Modules\Auth\Repositories\CustomerRepositoryInterface;
+use Modules\Auth\Services\AuthService;
+use Modules\Auth\Services\TokenService;
+use Modules\Customer\Models\Customer;
+use Tests\TestCase;
 
 class AuthServiceTest extends TestCase
 {

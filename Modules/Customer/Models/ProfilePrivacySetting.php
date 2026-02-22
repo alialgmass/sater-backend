@@ -16,6 +16,6 @@ class ProfilePrivacySetting extends Model
 
     public function customer()
     {
-        return $this->belongsTo(\Modules\Auth\Models\Customer::class);
+        return $this->belongsTo(\Modules\Customer\Models\Customer::class);
     }
 }

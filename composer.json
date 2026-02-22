@@ -20,6 +20,7 @@
         "laravel/tinker": "^2.10.1",
         "laravel/wayfinder": "^0.1.11",
         "nwidart/laravel-modules": "*",
+        "propaganistas/laravel-phone": "*",
         "rakutentech/laravel-request-docs": "*",
         "spatie/laravel-medialibrary": "*",
         "spatie/laravel-permission": "*",
@@ -27,6 +28,7 @@
         "stancl/tenancy": "*"
     },
     "require-dev": {
+        "driftingly/rector-laravel": "*",
         "fakerphp/faker": "^1.23",
         "laravel/boost": "*",
         "laravel/pail": "^1.2.2",
@@ -34,7 +36,8 @@
         "laravel/sail": "*",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.6",
-        "phpunit/phpunit": "^11.5.3"
+        "phpunit/phpunit": "^11.5.3",
+        "rector/rector": "*"
     },
     "autoload": {
         "psr-4": {

@@ -2,8 +2,8 @@
 
 namespace Modules\Customer\Services;
 
-use Modules\Auth\Models\Customer;
 use Modules\Customer\DTOs\UpdateProfileData;
+use Modules\Customer\Models\Customer;
 use Modules\Customer\Models\CustomerProfile;
 
 class ProfileService
@@ -20,7 +20,7 @@ class ProfileService
             ], fn($value) => !is_null($value))
         );
     }
-    
+
     public function getProfile(Customer $customer): CustomerProfile
     {
         return $customer->profile ?? $customer->profile()->create();

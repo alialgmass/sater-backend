@@ -3,10 +3,10 @@
 namespace Modules\Customer\Services;
 
 use Illuminate\Support\Facades\DB;
-use Modules\Auth\Models\Customer;
-use Modules\Customer\DTOs\CreateAddressData;
-use Modules\Customer\Models\CustomerAddress;
 use Illuminate\Validation\ValidationException;
+use Modules\Customer\DTOs\CreateAddressData;
+use Modules\Customer\Models\Customer;
+use Modules\Customer\Models\CustomerAddress;
 
 class AddressService
 {
@@ -48,7 +48,7 @@ class AddressService
         if ($address->customer_id !== $customer->id) {
             abort(403);
         }
-        
+
         if (!$this->geoService->validate($data->country, $data->city, $data->area)) {
              throw ValidationException::withMessages(['area' => 'Invalid location combination.']);
         }
@@ -72,7 +72,7 @@ class AddressService
                 'longitude' => $data->longitude,
                 'is_default' => $data->is_default,
             ]);
-            
+
             return $address;
         });
     }

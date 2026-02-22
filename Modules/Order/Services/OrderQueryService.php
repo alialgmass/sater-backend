@@ -2,8 +2,8 @@
 
 namespace Modules\Order\Services;
 
-use Modules\Auth\Models\Customer;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Modules\Customer\Models\Customer;
 use Modules\Order\Models\Order;
 
 class OrderQueryService

@@ -3,7 +3,6 @@
 namespace Modules\Customer\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
 use Modules\Customer\Enums\GenderEnum;
 
 class CustomerProfile extends Model
@@ -17,6 +16,6 @@ class CustomerProfile extends Model
 
     public function customer()
     {
-        return $this->belongsTo(\Modules\Auth\Models\Customer::class);
+        return $this->belongsTo(\Modules\Customer\Models\Customer::class);
     }
 }

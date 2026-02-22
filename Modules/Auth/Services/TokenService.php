@@ -2,7 +2,7 @@
 
 namespace Modules\Auth\Services;
 
-use Modules\Auth\Models\Customer;
+use Modules\Customer\Models\Customer;
 
 class TokenService
 {

@@ -7,15 +7,19 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Modules\Auth\DTOs\LoginData;
 use Modules\Auth\DTOs\RegisterCustomerData;
+use Modules\Auth\DTOs\VerifyOtpData;
 use Modules\Auth\Http\Requests\LoginRequest;
 use Modules\Auth\Http\Requests\RegisterRequest;
+use Modules\Auth\Http\Requests\VerifyOtpRequest;
 use Modules\Auth\Services\AuthService;
 
 class AuthController extends ApiController
 {
     public function __construct(
         protected AuthService $authService
-    ) {}
+    )
+    {
+    }
 
     public function register(RegisterRequest $request): JsonResponse
     {
@@ -25,6 +29,16 @@ class AuthController extends ApiController
 
         return $this->apiMessage('Customer registered successfully.')
             ->apiBody(['auth' => $result])
+            ->apiCode(201)
+            ->apiResponse();
+    }
+
+    public function verify(VerifyOtpRequest $request): JsonResponse
+    {
+        $data = VerifyOtpData::fromRequest($request);
+        $result = $this->authService->verify($data);
+        return $this->apiMessage('OTP verified successfully.')
+            ->apiBody(['token' => $result])
             ->apiCode(201)
             ->apiResponse();
     }

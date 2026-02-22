@@ -2,9 +2,9 @@
 
 namespace Modules\Customer\Policies;
 
-use Modules\Auth\Models\Customer;
-use Modules\Customer\Models\CustomerProfile;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Modules\Customer\Models\Customer;
+use Modules\Customer\Models\CustomerProfile;
 
 class CustomerProfilePolicy
 {

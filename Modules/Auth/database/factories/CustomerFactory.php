@@ -4,10 +4,10 @@ namespace Modules\Auth\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
-use Modules\Auth\Models\Customer;
+use Modules\Customer\Models\Customer;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\Modules\Auth\Models\Customer>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\Modules\Customer\Models\Customer>
  */
 class CustomerFactory extends Factory
 {

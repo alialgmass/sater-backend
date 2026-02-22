@@ -2,9 +2,9 @@
 
 namespace Modules\Customer\Services;
 
-use Illuminate\Support\Str;
-use Modules\Auth\Models\Customer;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use Modules\Customer\Models\Customer;
 
 class AccountDeletionService
 {
@@ -31,7 +31,7 @@ class AccountDeletionService
 
             // Delete addresses
             $customer->addresses()->delete();
-            
+
             // Delete privacy settings
             $customer->privacySettings()->delete();
 
@@ -40,8 +40,8 @@ class AccountDeletionService
             // If model doesn't have SoftDeletes, we might need to add it or do hard delete.
             // Requirements said "Soft-delete user initially".
             // So I should check if Customer model has SoftDeletes. I will add it if missing in next step.
-            
-            // For now, simpler to jus not call delete() if we want to keep order data? 
+
+            // For now, simpler to jus not call delete() if we want to keep order data?
             // "Keep financial & order data intact" -> usually implies SoftDeletes or keeping ID.
             // "Soft-delete user initially" -> OK.
         });

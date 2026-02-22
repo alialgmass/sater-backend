@@ -2,9 +2,9 @@
 
 namespace Modules\Auth\Actions;
 
-use Modules\Auth\Models\Customer;
 use Illuminate\Support\Facades\DB;
 use Modules\Auth\DTOs\RegisterCustomerData;
+use Modules\Customer\Models\Customer;
 
 class RegisterCustomerAction
 {

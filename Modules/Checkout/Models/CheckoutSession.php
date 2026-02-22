@@ -2,10 +2,7 @@
 
 namespace Modules\Checkout\Models;
 
-use Carbon\Carbon;
-
 use Illuminate\Database\Eloquent\Model;
-use Modules\Checkout\Models\AppliedCoupon;
 use Modules\Checkout\Enums\CheckoutStatusEnum;
 
 class CheckoutSession extends Model
@@ -25,7 +22,7 @@ class CheckoutSession extends Model
 
     public function customer()
     {
-        return $this->belongsTo(\Modules\Auth\Models\Customer::class);
+        return $this->belongsTo(\Modules\Customer\Models\Customer::class);
     }
 
     public function appliedCoupons()

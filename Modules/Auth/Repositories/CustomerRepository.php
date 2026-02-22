@@ -2,9 +2,9 @@
 
 namespace Modules\Auth\Repositories;
 
-use Modules\Auth\DTOs\RegisterCustomerData;
-use Modules\Auth\Models\Customer;
 use Illuminate\Support\Facades\Hash;
+use Modules\Auth\DTOs\RegisterCustomerData;
+use Modules\Customer\Models\Customer;
 
 class CustomerRepository implements CustomerRepositoryInterface
 {
@@ -12,7 +12,7 @@ class CustomerRepository implements CustomerRepositoryInterface
     {
         return Customer::create([
             'name' => $data->name,
-            'email' => $data->email,
+            // 'email' => $data->email,
             'password' => Hash::make($data->password),
             'phone' => $data->phone,
         ]);
@@ -26,5 +26,11 @@ class CustomerRepository implements CustomerRepositoryInterface
     public function findById(int $id): ?Customer
     {
         return Customer::find($id);
+    }
+
+    public function update(Customer $customer, array $data): Customer
+    {
+        $customer->update($data);
+        return $customer;
     }
 }

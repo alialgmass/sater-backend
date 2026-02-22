@@ -3,14 +3,14 @@
 
 namespace Modules\Order\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Modules\Auth\Models\Customer;
+use Modules\Customer\Models\Customer;
+use Modules\Order\Database\Factories\OrderFactory;
 use Modules\Order\Enums\OrderStatusEnum;
 use Modules\Order\Enums\PaymentStatusEnum;
-use Modules\Order\Database\Factories\OrderFactory;
 
 class Order extends Model
 {

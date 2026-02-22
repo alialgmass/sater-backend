@@ -2,10 +2,10 @@
 
 namespace Modules\Auth\Actions;
 
-use Modules\Auth\Models\Customer;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Modules\Auth\DTOs\LoginData;
+use Modules\Customer\Models\Customer;
 
 class LoginCustomerAction
 {

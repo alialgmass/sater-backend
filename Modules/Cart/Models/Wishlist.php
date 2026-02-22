@@ -3,7 +3,6 @@
 namespace Modules\Cart\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
 use Illuminate\Support\Str;
 
 class Wishlist extends Model
@@ -12,7 +11,7 @@ class Wishlist extends Model
 
     public function customer()
     {
-        return $this->belongsTo(\Modules\Auth\Models\Customer::class);
+        return $this->belongsTo(\Modules\Customer\Models\Customer::class);
     }
 
     public function items()
@@ -24,7 +23,7 @@ class Wishlist extends Model
     {
         $this->share_token = Str::random(32);
         $this->save();
-        
+
         return $this->share_token;
     }
 }
