@@ -29,5 +29,6 @@ class SendOtpForRegistration
          */
         $customer = $event->user;
         $otp = $this->otpService->generate($customer);
+
     }
 }

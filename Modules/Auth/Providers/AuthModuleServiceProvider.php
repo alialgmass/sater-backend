@@ -7,6 +7,7 @@ use Illuminate\Support\ServiceProvider;
 
 class AuthModuleServiceProvider extends ServiceProvider
 {
+
     public function boot(): void
     {
         $this->registerRoutes();
@@ -20,6 +21,7 @@ class AuthModuleServiceProvider extends ServiceProvider
             \Modules\Auth\Repositories\CustomerRepositoryInterface::class,
             \Modules\Auth\Repositories\CustomerRepository::class
         );
+
     }
 
     protected function registerRoutes(): void

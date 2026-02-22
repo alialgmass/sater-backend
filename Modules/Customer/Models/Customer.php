@@ -21,7 +21,7 @@ class Customer extends Authenticatable
 
     protected $casts = [
         'password' => 'hashed',
-        'phone' => RawPhoneNumberCast::class.'EG'
+        'phone' => RawPhoneNumberCast::class
     ];
 
     public function profile()

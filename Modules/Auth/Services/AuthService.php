@@ -34,7 +34,8 @@ class AuthService
     }
     public function verify(VerifyOtpData $otpData):string
     {
-        $customer=auth('api_customers')->user();
+        $customer=request()->user();
+      
        if (!$this->otpService->verify($customer,$otpData->otp)) {
            throw ValidationException::withMessages([
                'otp' => "otp is invalid",

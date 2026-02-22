@@ -4,9 +4,19 @@ namespace Modules\Checkout\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
+use Modules\Checkout\Repositories\CheckoutSessionRepository;
+use Modules\Checkout\Repositories\Contracts\CheckoutSessionRepositoryInterface;
 
 class CheckoutServiceProvider extends ServiceProvider
 {
+    public function register(): void
+    {
+        $this->app->bind(
+            CheckoutSessionRepositoryInterface::class,
+            CheckoutSessionRepository::class,
+        );
+    }
+
     public function boot(): void
     {
         $this->registerRoutes();
@@ -21,3 +31,4 @@ class CheckoutServiceProvider extends ServiceProvider
             ->group(__DIR__ . '/../Routes/api.php');
     }
 }
+
