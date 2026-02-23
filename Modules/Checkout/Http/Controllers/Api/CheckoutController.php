@@ -35,8 +35,11 @@ class CheckoutController extends ApiController
 
         return $this->apiMessage('Order placed successfully.')
             ->apiBody([
-                'order_number' => $masterOrder->order_number,
-                'total'        => $masterOrder->total_amount,
+                'order' => [
+                    'order_number' => $masterOrder->order_number,
+                    'total'        => $masterOrder->total_amount,
+                    'status'       => $masterOrder->status,
+                ],
                 'summary'      => $this->checkoutService->getSummary($session),
             ])
             ->apiCode(201)

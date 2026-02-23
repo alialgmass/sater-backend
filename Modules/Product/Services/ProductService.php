@@ -15,4 +15,13 @@ class ProductService
     {
         return $this->products->paginate($filters);
     }
+
+    public function find(string|int $identifier): ?\Modules\Product\Models\Product
+    {
+        if (is_numeric($identifier)) {
+            return $this->products->findById((int) $identifier);
+        }
+
+        return $this->products->findBySlug($identifier);
+    }
 }

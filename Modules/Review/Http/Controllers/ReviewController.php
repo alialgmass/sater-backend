@@ -10,47 +10,49 @@ class ReviewController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('review::index');
-    }
+        $request->validate([
+            'product_id' => ['required', 'integer', 'exists:products,id'],
+        ]);
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        return view('review::create');
+        $reviews = \Modules\Review\Models\Review::where('product_id', $request->product_id)
+            ->where('approved', true)
+            ->with('customer:id,name')
+            ->latest()
+            ->paginate($request->per_page ?? 10);
+
+        return response()->json([
+            'success' => true,
+            'data' => $reviews,
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request) {}
-
-    /**
-     * Show the specified resource.
-     */
-    public function show($id)
+    public function store(Request $request)
     {
-        return view('review::show');
+        $request->validate([
+            'product_id' => ['required', 'integer', 'exists:products,id'],
+            'rating' => ['required', 'integer', 'min:1', 'max:5'],
+            'comment' => ['nullable', 'string', 'max:1000'],
+        ]);
+
+        $user = $request->user();
+
+        $review = \Modules\Review\Models\Review::create([
+            'product_id' => $request->product_id,
+            'customer_id' => $user->id,
+            'rating' => $request->rating,
+            'comment' => $request->comment,
+            'approved' => true, // Auto-approve for now or set to false if moderation needed
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Review submitted successfully.',
+            'data' => $review,
+        ], 201);
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
-    {
-        return view('review::edit');
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id) {}
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id) {}
 }

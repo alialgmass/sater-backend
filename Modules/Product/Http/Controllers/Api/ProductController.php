@@ -28,6 +28,8 @@ class ProductController extends ApiController
             'min_price',
             'max_price',
             'on_sale',
+            'featured',
+            'sort',
             'per_page'
         ]));
 
@@ -35,5 +37,16 @@ class ProductController extends ApiController
             ['products' =>
                 ProductResource::paginate($products)
             ])->apiResponse();
+    }
+
+    public function show($identifier)
+    {
+        $product = $this->service->find($identifier);
+
+        if (!$product) {
+            return $this->apiMessage('Product not found')->apiCode(404)->apiResponse();
+        }
+
+        return $this->apiBody(['product' => new ProductResource($product)])->apiResponse();
     }
 }

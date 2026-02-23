@@ -16,4 +16,15 @@ class VendorController extends ApiController
             'vendors' => VendorResource::paginate($vendors)
         ])->apiResponse();
     }
+
+    public function show(Request $request, VendorService $vendorService, $id)
+    {
+        $vendor = $vendorService->findVendorById($id);
+
+        if (!$vendor) {
+            return $this->apiMessage('Vendor not found')->apiCode(404)->apiResponse();
+        }
+
+        return $this->apiBody(['vendor' => new VendorResource($vendor)])->apiResponse();
+    }
 }

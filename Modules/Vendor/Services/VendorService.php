@@ -2,12 +2,12 @@
 
 namespace Modules\Vendor\Services;
 
-use DB;
+use Illuminate\Support\Facades\DB;
 use Exception;
 use Modules\Vendor\DTOs\VendorDTO;
 use Modules\Vendor\Models\Vendor;
 use Modules\Vendor\Repositories\Contracts\VendorRepositoryInterface;
-use Storage;
+use Illuminate\Support\Facades\Storage;
 
 class VendorService
 {
@@ -19,6 +19,11 @@ class VendorService
     public function listActiveVendors(): \Illuminate\Pagination\LengthAwarePaginator
     {
         return $this->vendorRepository->listActiveVendors();
+    }
+
+    public function findVendorById(int $id): ?Vendor
+    {
+        return Vendor::withCount('products')->find($id);
     }
 
     /**

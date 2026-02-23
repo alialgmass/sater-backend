@@ -13,10 +13,21 @@ class Review extends Model
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = [];
+    protected $fillable = [
+        'product_id',
+        'customer_id',
+        'rating',
+        'comment',
+        'approved',
+    ];
 
-    // protected static function newFactory(): ReviewFactory
-    // {
-    //     // return ReviewFactory::new();
-    // }
+    public function product()
+    {
+        return $this->belongsTo(\Modules\Product\Models\Product::class);
+    }
+
+    public function customer()
+    {
+        return $this->belongsTo(\Modules\Auth\Models\Customer::class, 'customer_id');
+    }
 }

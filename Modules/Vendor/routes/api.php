@@ -8,8 +8,11 @@ use Modules\Vendor\Http\Controllers\Api\VendorShippingController;
 
 Route::middleware([])->prefix('v1')->group(function () {
     Route::apiResource('vendors', VendorController::class)
-    ->only('index')
+    ->only(['index', 'show'])
     ->names('vendor');
+    
+    // Products by vendor
+    Route::get('vendors/{vendor_id}/products', [\Modules\Product\Http\Controllers\Api\ProductController::class, 'index'])->name('vendor.products');
 
     // Vendor store search
     Route::get('vendors/{vendor_id}/search', [VendorSearchController::class, 'search'])->name('vendor.search');

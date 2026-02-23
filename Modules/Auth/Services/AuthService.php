@@ -30,6 +30,7 @@ class AuthService
         return [
             'customer' => $customer,
             'token' => $token,
+            'requires_otp' => is_null($customer->phone_verified_at),
         ];
     }
     public function verify(VerifyOtpData $otpData):string
@@ -62,6 +63,7 @@ class AuthService
         return [
             'customer' => $customer,
             'token' => $token,
+            'requires_otp' => is_null($customer->phone_verified_at),
         ];
     }
 

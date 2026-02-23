@@ -4,7 +4,11 @@ namespace Modules\Category\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Modules\Category\Models\Category;
 
+/**
+ * @mixin Category
+ */
 class CategoryResource extends JsonResource
 {
     /**
@@ -20,6 +24,8 @@ class CategoryResource extends JsonResource
             'name' => $this->name,
             'slug' => $this->slug,
             'description' => $this->description,
+           // 'image' => $this->getFirstMediaUrl('image') ? url($this->getFirstMediaUrl('image')) : null,
+            'products_count' => (int) ($this->products_count ?? $this->products()->count()),
             'parent_id' => $this->parent_id,
             'parent' => $this->whenLoaded('parent', function () {
                 return new CategoryResource($this->parent);

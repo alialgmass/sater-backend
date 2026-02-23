@@ -10,7 +10,7 @@ use Modules\Product\Http\Controllers\Api\TagController;
 Route::middleware([])->prefix('v1')->group(function () {
     // Products CRUD
     Route::apiResource('products', ProductController::class)
-        ->only('index')
+        ->only('index', 'show')
         ->names('product');
 
     // Attributes

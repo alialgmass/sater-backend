@@ -99,4 +99,31 @@ class WishlistController extends ApiController
             ->apiBody(['cart_item' => $cartItem])
             ->apiResponse();
     }
+
+    public function toggle(Request $request): JsonResponse
+    {
+        $request->validate([
+            'product_id' => ['required', 'integer', 'exists:products,id'],
+        ]);
+
+        $customer = $request->user();
+        $product = Product::findOrFail($request->product_id);
+        $wishlist = $this->wishlistService->getOrCreateWishlist($customer);
+
+        $existingItem = $wishlist->items()->where('product_id', $product->id)->first();
+
+        if ($existingItem) {
+            $this->wishlistService->removeItem($existingItem);
+            return $this->apiMessage('Product removed from wishlist.')
+                ->apiBody(['status' => 'removed'])
+                ->apiResponse();
+        }
+
+        $item = $this->wishlistService->addItem($wishlist, $product);
+
+        return $this->apiMessage('Product added to wishlist.')
+            ->apiBody(['status' => 'added', 'wishlist_item' => $item])
+            ->apiCode(201)
+            ->apiResponse();
+    }
 }

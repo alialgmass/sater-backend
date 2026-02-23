@@ -60,7 +60,7 @@ class CartController extends ApiController
         // Calculate totals
         $totals = $this->pricingService->calculateCartTotals($items);
 
-        $cartData = new CartResource($items, $totals);
+        $cartData = new CartResource($items, $totals, $user ? null : $cartKey);
 
         return $this->apiBody([
             'cart' => $cartData
@@ -98,9 +98,18 @@ class CartController extends ApiController
             ->apiResponse();
     }
 
-    public function updateItem(UpdateCartItemRequest $request, CartItem $item): JsonResponse
+    public function updateItem(UpdateCartItemRequest $request, $id): JsonResponse
     {
         $data = UpdateCartItemData::fromRequest($request);
+        $user = $request->user('api_customers');
+        $cartKey = $request->header('X-Cart-Key') ?? $request->input('cart_key');
+
+        $item = $this->resolveCartItem($id, $user, $cartKey);
+
+        if (!$item) {
+            return $this->apiMessage('Item not found in your cart.')->apiCode(404)->apiResponse();
+        }
+
         $updatedItem = $this->cartItemService->updateQuantity($item, $data->quantity);
 
         if ($data->quantity <= 0) {
@@ -115,16 +124,44 @@ class CartController extends ApiController
             ->apiResponse();
     }
 
-    public function removeItem(Request $request, CartItem $item): JsonResponse
+    public function removeItem(Request $request, $id): JsonResponse
     {
+        $user = $request->user('api_customers');
+        $cartKey = $request->header('X-Cart-Key') ?? $request->input('cart_key');
+
+        $item = $this->resolveCartItem($id, $user, $cartKey);
+
+        if (!$item) {
+            return $this->apiMessage('Item not found in your cart.')->apiCode(404)->apiResponse();
+        }
+
         $this->cartItemService->removeItem($item);
 
         return $this->apiMessage('Item removed from cart successfully.')
             ->apiResponse();
     }
 
-    public function saveForLater(Request $request, CartItem $item): JsonResponse
+    public function clear(Request $request): JsonResponse
     {
+        $user = $request->user('api_customers');
+        $cartKey = $request->header('X-Cart-Key') ?? $request->input('cart_key');
+
+        if ($user) {
+            $cart = $this->cartService->getOrCreateCart($user);
+            $this->cartItemService->clearCart($cart);
+        } elseif ($cartKey) {
+            $this->cartItemService->clearCart($cartKey);
+        }
+
+        return $this->apiMessage('Cart cleared successfully.')
+            ->apiResponse();
+    }
+
+    public function saveForLater(Request $request, $id): JsonResponse
+    {
+        $user = $request->user('api_customers');
+        $item = CartItem::whereHas('cart', fn($q) => $q->where('customer_id', $user->id))->findOrFail($id);
+
         $savedItem = $this->cartItemService->saveForLater($item);
 
         return $this->apiMessage('Item saved for later.')
@@ -132,5 +169,18 @@ class CartController extends ApiController
                 'saved_item' => $savedItem
             ])
             ->apiResponse();
+    }
+
+    protected function resolveCartItem($id, $user, $cartKey)
+    {
+        if ($user) {
+            return CartItem::whereHas('cart', fn($q) => $q->where('customer_id', $user->id))->find($id);
+        }
+        
+        if ($cartKey) {
+            return \Modules\Cart\Models\GuestCart::byCartKey($cartKey)->find($id);
+        }
+
+        return null;
     }
 }

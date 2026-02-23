@@ -29,7 +29,31 @@ class ProductRepository implements ProductRepositoryContract
                 $q->where('name', 'like', "%{$v}%")
                     ->orWhere('sku', 'like', "%{$v}%");
             })
-            ->latest()
+            ->when($filters['featured'] ?? null, fn ($q, $v) => $q->where('attributes->featured', true))
+            ->when($filters['sort'] ?? null, function ($q, $v) {
+                switch ($v) {
+                    case 'popular':
+                        return $q->orderBy('sales_count', 'desc');
+                    case 'price_asc':
+                        return $q->orderBy('price', 'asc');
+                    case 'price_desc':
+                        return $q->orderBy('price', 'desc');
+                    case 'rating':
+                        return $q->orderBy('avg_rating', 'desc');
+                    default:
+                        return $q->latest();
+                }
+            }, fn($q) => $q->latest())
             ->paginate($filters['per_page'] ?? 15);
+    }
+
+    public function findById(int $id): ?Product
+    {
+        return Product::with(['vendor', 'category', 'colors', 'sizes', 'tags'])->find($id);
+    }
+
+    public function findBySlug(string $slug): ?Product
+    {
+        return Product::with(['vendor', 'category', 'colors', 'sizes', 'tags'])->where('slug', $slug)->first();
     }
 }

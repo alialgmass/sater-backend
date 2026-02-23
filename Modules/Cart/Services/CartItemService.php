@@ -102,9 +102,19 @@ class CartItemService
         return $item;
     }
 
-    public function removeItem(CartItem $item): void
+    public function removeItem(CartItem|GuestCart $item): void
     {
         $item->delete();
+    }
+
+    public function clearCart($cart): void
+    {
+        if ($cart instanceof Cart) {
+            $cart->items()->delete();
+        } else {
+            // $cart is cartKey string
+            GuestCart::byCartKey($cart)->delete();
+        }
     }
 
     public function saveForLater(CartItem $item): SavedCartItem
