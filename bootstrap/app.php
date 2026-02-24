@@ -1,5 +1,6 @@
 <?php
 
+use App\Exceptions\ApiException\ApiException;
 use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Middleware\TenantSubscriptionMiddleware;
 use Illuminate\Foundation\Application;
@@ -39,7 +40,9 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        $exceptions->render(function (ApiException $e) {
+          return  $e->toResponse();
+        });
     })
     ->withEvents(discover: [
         __DIR__.'/../Modules/*/Events',

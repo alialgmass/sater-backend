@@ -7,5 +7,6 @@ use App\Exceptions\ApiException\ExceptionResponse;
 use Exception;
 
 class CustomerPhoneNotVerified extends ExceptionResponse {
+    protected int $customCode =4010;
 
 }
